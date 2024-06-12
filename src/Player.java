@@ -1,24 +1,136 @@
-package com.codingame.game;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import com.codingame.gameengine.core.AbstractMultiplayerPlayer;
+class Player {
 
-public class Player extends AbstractMultiplayerPlayer {
+    public static void main(String args[]) {
+        Scanner in = new Scanner(System.in);
+        int playerIdx = in.nextInt();
+        int nbGames = in.nextInt();
+        if (in.hasNextLine()) {
+            in.nextLine();
+        }
+
+        // game loop
+        while (true) {
+            for (int i = 0; i < 3; i++) {
+                String scoreInfo = in.nextLine();
+            }
+            for (int i = 0; i < nbGames; i++) {
+                String gpu = in.next();
+                int reg0 = in.nextInt();
+                int reg1 = in.nextInt();
+                int reg2 = in.nextInt();
+                int reg3 = in.nextInt();
+                int reg4 = in.nextInt();
+                int reg5 = in.nextInt();
+                int reg6 = in.nextInt();
+            }
+            in.nextLine();
+
+            // Write an action using System.out.println()
+            // To debug: System.err.println("Debug messages...");
+
+            System.out.println("LEFT");
+        }
+    }
+
+    private static String chooseDirection(String[] gpus, int[][] registers) {
+        // Determine the games to consider (the 3 games with the least obstacles)
+        List<Integer> gamesToConsider = getGamesToConsider(gpus);
+
+        // Check each game's state to decide the action
+        for (int i : gamesToConsider) {
+            String gpu = gpus[i];
+            int position = registers[i][0];
+            int stunCount = registers[i][3];
+
+            // If the game is stunned, skip it
+            if (stunCount > 0) {
+                continue;
+            }
+
+            // Check if there's an obstacle in the next cell
+            if (position < gpu.length() - 1 && gpu.charAt(position + 1) == '#') {
+                // Try to jump over the obstacle
+                registers[i][0]++; // Move position forward
+
+                // Check if we can do a double jump (obstacle two cells ahead)
+                if (position < gpu.length() - 2 && gpu.charAt(position + 2) == '#') {
+                    registers[i][0]++; // Move position forward again
+                    return "UP";
+                } else {
+                    return "UP";
+                }
+            }
+
+            // Check if there's an obstacle two cells ahead for double jump
+            if (position < gpu.length() - 2 && gpu.charAt(position + 2) == '#') {
+                registers[i][0] += 2; // Move position forward
+                return "UP";
+            }
+        }
+
+        // Default action: move one space to the right
+        return "RIGHT";
+    }
+
+    private static List<Integer> getGamesToConsider(String[] gpus) {
+        // Find the games with the least obstacles
+        List<Integer> gamesToConsider = new ArrayList<>();
+        int[] obstacleCounts = new int[gpus.length];
+
+        // Calculate obstacle counts for each game
+        for (int i = 0; i < gpus.length; i++) {
+            String gpu = gpus[i];
+            int obstacleCount = 0;
+
+            // Count obstacles in the game
+            for (int j = 0; j < gpu.length(); j++) {
+                if (gpu.charAt(j) == '#') {
+                    obstacleCount++;
+                }
+            }
+
+            obstacleCounts[i] = obstacleCount;
+        }
+
+        // Find indices of games with the least obstacles
+        int min1 = Integer.MAX_VALUE, min2 = Integer.MAX_VALUE, min3 = Integer.MAX_VALUE;
+        int idx1 = -1, idx2 = -1, idx3 = -1;
+
+        for (int i = 0; i < obstacleCounts.length; i++) {
+            if (obstacleCounts[i] < min1) {
+                min3 = min2;
+                idx3 = idx2;
+                min2 = min1;
+                idx2 = idx1;
+                min1 = obstacleCounts[i];
+                idx1 = i;
+            } else if (obstacleCounts[i] < min2) {
+                min3 = min2;
+                idx3 = idx2;
+                min2 = obstacleCounts[i];
+                idx2 = i;
+            } else if (obstacleCounts[i] < min3) {
+                min3 = obstacleCounts[i];
+                idx3 = i;
+            }
+        }
+
+        // Add the indices of the 3 games to consider
+        gamesToConsider.add(idx1);
+        gamesToConsider.add(idx2);
+        gamesToConsider.add(idx3);
+
+        return gamesToConsider;
+    }
 
     String message;
     Action action;
     int[][] medals;
-    Map<String, Integer> registerPositions;
-    List<String> trackState;
 
     public Player() {
-        registerPositions = new HashMap<>();
-        trackState = new ArrayList<>();
     }
 
     public void init(int gameCount) {
@@ -33,7 +145,6 @@ public class Player extends AbstractMultiplayerPlayer {
         return p;
     }
 
-    @Override
     public int getExpectedOutputLines() {
         return 1;
     }
@@ -86,61 +197,8 @@ public class Player extends AbstractMultiplayerPlayer {
         }
         return minigameScores.stream().collect(Collectors.joining(" * ")) + " = " + getPoints();
     }
-
-    /**
-     * Choisit une action pour le mini-jeu de course de haies.
-     *
-     * @param gpu  une chaîne représentant l'état de la piste avec les registres
-     * @param reg0 à reg6  les positions des registres
-     * @return l'action choisie (UP, RIGHT, WAIT)
-     */
-
-    public String chooseAction(String[] gpu, int reg0, int reg1, int reg2, int reg3, int reg4, int reg5, int reg6) {
-        // Effacer la map et la liste pour ce tour
-        registerPositions.clear();
-        trackState.clear();
-
-        // Remplir la map avec les positions actuelles des registres
-        registerPositions.put("reg0", reg0); // position du player 1
-        registerPositions.put("reg1", reg1); // position du player 2
-        registerPositions.put("reg2", reg2); // position du player 3
-        registerPositions.put("reg3", reg3); // Stun du player 1
-        registerPositions.put("reg4", reg4); // Stun du player 2
-        registerPositions.put("reg5", reg5); // Stun du player 3
-        registerPositions.put("reg6", reg6); // Useless
-
-        // Remplir la liste avec l'état actuel de la piste
-        for (String state : gpu) {
-            trackState.add(state);
-        }
-
-        System.out.println(GetTrackStateVisual());
-
-        // Logique pour le mini-jeu de course de haies
-        int currentPosition = registerPositions.get("reg0"); // Supposons que reg0 est la position actuelle à vérifier
-        if (currentPosition < trackState.size() && trackState.get(currentPosition).charAt(currentPosition) == '#') {
-            // Il y a une haie, sauter par-dessus
-            return "UP";
-        } else if (currentPosition < trackState.size() && trackState.get(currentPosition).equals("GAME_OVER")) {
-            // Tour de réinitialisation
-            return "WAIT";
-        } else {
-            // Avancer normalement
-            return "RIGHT";
-        }
-    }
-
-    /**
-     * Retourne une représentation visuelle de l'état de la piste.
-     *
-     * @return une chaîne représentant visuellement l'état de la piste
-     */
-    public String getTrackStateVisual() {
-        StringBuilder visual = new StringBuilder();
-        for (String state : trackState) {
-            visual.append(state).append("\n");
-        }
-        return visual.toString();
-    }
 }
 
+enum Action {
+    UP, DOWN, LEFT, RIGHT
+}
