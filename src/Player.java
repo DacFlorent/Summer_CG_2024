@@ -16,23 +16,55 @@ class Player {
             for (int i = 0; i < 3; i++) {
                 String scoreInfo = in.nextLine();
             }
+
+            // listes de stockage GPUs et Reg positions
+            List<String> gpus = new ArrayList<>();
+            List<int[]> registers = new ArrayList<>();
+
             for (int i = 0; i < nbGames; i++) {
                 String gpu = in.next();
-                int reg0 = in.nextInt();
-                int reg1 = in.nextInt();
-                int reg2 = in.nextInt();
-                int reg3 = in.nextInt();
-                int reg4 = in.nextInt();
-                int reg5 = in.nextInt();
-                int reg6 = in.nextInt();
+                int reg0 = in.nextInt(); // position player 1
+                int reg1 = in.nextInt(); // position player 2
+                int reg2 = in.nextInt(); // position player 3
+                int reg3 = in.nextInt(); // stun player 1
+                int reg4 = in.nextInt(); // stun player 2
+                int reg5 = in.nextInt(); // stun player 3
+                int reg6 = in.nextInt(); // useless
+
+                gpus.add(gpu);
+                registers.add(new int[]{reg0, reg1, reg2, reg3, reg4, reg5, reg6});
+
+                // debug System.err.println("message")
+                System.err.println("GPUs : " + gpus);
+                System.err.println("Registers : " + registers);
             }
             in.nextLine();
+
+            // Boucle de calcul par itération
+            for (int i = 0; i < nbGames; i++) {
+                String gpu = gpus.get(i);
+                int[] reg = registers.get(i);
+                int result = calculate(gpu, reg);
+                System.err.println("Game " + i + "GPU = " + gpu + ", Result = " + result);
+            }
 
             // Write an action using System.out.println()
             // To debug: System.err.println("Debug messages...");
 
             System.out.println("LEFT");
         }
+    }
+
+    // Methode de calcul par itération
+    public static int calculate(String gpu, int[] reg) {
+        // Test simple : Nbr obstacles + chutes
+        int obstacles = reg[0];
+        int falls = reg[3];
+
+        int result = obstacles + falls;
+
+        return result;
+
     }
 
     private static String chooseDirection(String[] gpus, int[][] registers) {
