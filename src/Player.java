@@ -44,8 +44,9 @@ class Player {
             for (int i = 0; i < nbGames; i++) {
                 String gpu = gpus.get(i);
                 int[] reg = registers.get(i);
-                int result = calculate(gpu, reg);
-                System.err.println("Game " + i + "GPU = " + gpu + ", Result = " + result);
+                List<Action> actionsPossibles = calculatePossibleACtions(gpu, reg);
+
+                System.err.println("Game " + i + "GPU = " + gpu + ", Actions possibles = " + actionsPossibles);
             }
 
             // Write an action using System.out.println()
@@ -56,14 +57,28 @@ class Player {
     }
 
     // Methode de calcul par itération
-    public static int calculate(String gpu, int[] reg) {
-        // Test simple : Nbr obstacles + chutes
-        int obstacles = reg[0];
-        int falls = reg[3];
+    public static List<Action> calculatePossibleACtions(String gpu, int[] reg) {
+        List<Action> actions = new ArrayList<>();
 
-        int result = obstacles + falls;
+        int positionPlayer1 = reg[0];
+        int positionPlayer2 = reg[1];
+        int positionPlayer3 = reg[2];
+        int stunPlayer1 = reg[3];
+        int stunPlayer2 = reg[4];
+        int stunPlayer3 = reg[5];
 
-        return result;
+        // distance du prochain #
+        int distanceProchainObstacle = positionPlayer1;
+
+        if (distanceProchainObstacle > 0) {
+            actions.add(Action.UP);
+        } else {
+            actions.add(Action.DOWN);
+            actions.add(Action.LEFT);
+            actions.add(Action.RIGHT);
+        }
+
+        return actions;
 
     }
 
