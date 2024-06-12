@@ -19,8 +19,8 @@ class Player {
 
             // listes de stockage GPUs et Reg positions
             List<String> gpus = new ArrayList<>();
-            List<Integer> positionRegisters = new ArrayList<>();
-            List<Integer> stunRegisters = new ArrayList<>();
+            List<Integer[]> positionRegisters = new ArrayList<>();
+            List<Integer[]> stunRegisters = new ArrayList<>();
 
             for (int i = 0; i < nbGames; i++) {
                 String gpu = in.next();
@@ -53,60 +53,58 @@ class Player {
                         break;
                     default:
                         throw new IllegalArgumentException("Unexpected value: " + playerIdx);
-                    }
-                        positionRegisters.add(positionReg);
-                        stunRegisters.add(stunReg);
-
-
-
-
-                        // debug System.err.println("message")
-                        System.err.println("GPU : " + gpu);
-                        System.err.println("Position Register : " + Arrays.toString(positionReg));
-                        System.err.println("Stun Register : " + Arrays.toString(stunReg));
                 }
-                in.nextLine();
+                positionRegisters.add(positionReg);
+                stunRegisters.add(stunReg);
 
-                // Boucle de calcul par itération
-                for (int i = 0; i < nbGames; i++) {
-                    String gpu = gpus.get(i);
-                    int positionReg = positionRegisters.get(i);
-                    List<Action> actionsPossibles = calculatePossibleActions(gpu, positionReg);
 
-                    System.err.println("Game " + i + "GPU = " + gpu + ", Actions possibles = " + actionsPossibles);
-                }
-
-                // Write an action using System.out.println()
-                // To debug: System.err.println("Debug messages...");
-
-                System.out.println("LEFT");
+                // debug System.err.println("message")
+                System.err.println("GPU : " + gpu);
+                System.err.println("Position Register : " + Arrays.toString(positionReg));
+                System.err.println("Stun Register : " + Arrays.toString(stunReg));
             }
+            in.nextLine();
+
+            // Boucle de calcul par itération
+            for (int i = 0; i < nbGames; i++) {
+                String gpu = gpus.get(i);
+                Integer[] positionReg = positionRegisters.get(i);
+                List<Action> actionsPossibles = calculatePossibleActions(gpu, positionReg);
+
+                System.err.println("Game " + i + "GPU = " + gpu + ", Actions possibles = " + actionsPossibles);
+            }
+
+            // Write an action using System.out.println()
+            // To debug: System.err.println("Debug messages...");
+
+            System.out.println("LEFT");
         }
+    }
 
-        // Methode de calcul par itération
-        public static List<Action> calculatePossibleActions (String gpu,int reg){
-            List<Action> actions = new ArrayList<>();
+    // Methode de calcul par itération
+    public static List<Action> calculatePossibleActions(String gpu, Integer[] reg) {
+        List<Action> actions = new ArrayList<>();
 
 
-            // distance du prochain #
-            // ....#.#..
-            int distanceProchainObstacle = gpu.indexOf("#", reg);
+        // distance du prochain #
+        // ....#.#..
+        int distanceProchainObstacle = gpu.indexOf("#", reg[0]);
 
-            if (distanceProchainObstacle > 0) {
-                actions.add(Action.UP);
+        if (distanceProchainObstacle > 0) {
+            actions.add(Action.UP);
+        } else {
+            int distanceAAvance = 2;
+
+            if (distanceProchainObstacle > 1) {
+                actions.add(Action.DOWN);
             } else {
-                int distanceAAvance = 2;
-
-                if (distanceProchainObstacle > 1) {
-                    actions.add(Action.DOWN);
-                } else {
-                    actions.add(Action.LEFT);
-                }
+                actions.add(Action.LEFT);
             }
-
-            return actions;
-
         }
+
+        return actions;
+
+    }
 
         private static String chooseDirection (String[]gpus,int[][] registers){
             // Determine the games to consider (the 3 games with the least obstacles)
