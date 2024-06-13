@@ -1,13 +1,17 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 class Player {
-    private static List<Integer> obstacles = new ArrayList<>();
-    private static List<Integer> futureObstacles = new ArrayList<>();
+    private static Map<Integer, GameInfo> gamesInfo = new HashMap<>();
     private static boolean isStunned = false;
     private static int playerIdx;
     private static int nbGames;
+
+    static class GameInfo {
+        String gpu;
+        List<Integer> obstacles = new ArrayList<>();
+        List<Integer> futureObstacles = new ArrayList<>();
+        int myPosition;
+    }
 
     public static void main(String args[]) {
         Scanner in = new Scanner(System.in);
@@ -29,85 +33,85 @@ class Player {
             }
 
             // Read game data for each mini-game
-            String[] gpu = new String[nbGames];
-            int[][] registers = new int[nbGames][7]; // 7 registers (reg0 to reg6)
             for (int i = 0; i < nbGames; i++) {
-                gpu[i] = in.next();
+                String gpu = in.next();
+                int[] registers = new int[7]; // 7 registers (reg0 to reg6)
                 for (int j = 0; j < 7; j++) {
-                    registers[i][j] = in.nextInt();
+                    registers[j] = in.nextInt();
                 }
                 if (in.hasNextLine()) {
                     in.nextLine(); // Consume newline character
                 }
+
+                // Store game information
+                GameInfo gameInfo = new GameInfo();
+                gameInfo.gpu = gpu;
+                gameInfo.myPosition = registers[0];
+                gamesInfo.put(i, gameInfo);
             }
 
-            // Update player's current position
-            int myPosition = registers[playerIdx][0];
+            // Update current game info
+            GameInfo currentGame = gamesInfo.get(playerIdx);
 
             // Pre-calculate obstacles for the current player's GPU
-            calculateObstacles(gpu[playerIdx]);
+            calculateObstacles(currentGame);
 
             // Pre-calculate future obstacles
-            updateFutureObstacles(gpu[playerIdx], myPosition);
+            updateFutureObstacles(currentGame);
 
             // Choose the action for the current game state
-            String direction = chooseDirection(gpu[playerIdx], myPosition, registers[playerIdx][3], 0);
+            String direction = chooseDirection(currentGame);
 
             // Output the chosen direction
             System.out.println(direction);
         }
     }
 
-    private static void calculateObstacles(String gpu) {
-        obstacles.clear();
-        int trackLength = gpu.length();
+    private static void calculateObstacles(GameInfo gameInfo) {
+        gameInfo.obstacles.clear();
+        int trackLength = gameInfo.gpu.length();
         for (int i = 0; i < trackLength; i++) {
-            if (gpu.charAt(i) == '#') {
-                obstacles.add(i);
+            if (gameInfo.gpu.charAt(i) == '#') {
+                gameInfo.obstacles.add(i);
             }
         }
     }
 
-    private static void updateFutureObstacles(String gpu, int myPosition) {
-        futureObstacles.clear();
-        int trackLength = gpu.length();
+    private static void updateFutureObstacles(GameInfo gameInfo) {
+        gameInfo.futureObstacles.clear();
+        int trackLength = gameInfo.gpu.length();
+        int myPosition = gameInfo.myPosition;
 
         // Add current obstacles
-        for (int obstacle : obstacles) {
+        for (int obstacle : gameInfo.obstacles) {
             if (obstacle > myPosition) {
-                futureObstacles.add(obstacle);
+                gameInfo.futureObstacles.add(obstacle);
             }
         }
         // Analyze the track for new obstacles that you can see ahead
         for (int i = myPosition; i < trackLength; i++) {
-            if (gpu.charAt(i) == '#') {
-                futureObstacles.add(i);
+            if (gameInfo.gpu.charAt(i) == '#') {
+                gameInfo.futureObstacles.add(i);
             }
         }
     }
 
-    private static String chooseDirection(String gpu, int myPosition, int myStunCount, int gameIdx) {
+    private static String chooseDirection(GameInfo gameInfo) {
         // If stunned, do nothing
-        if (isStunned && gameIdx == playerIdx) {
+        if (isStunned) {
             return "LEFT";
         }
 
         // Check the track length
-        int trackLength = gpu.length();
-
-        // Check if the player is stunned in this game
-        if (gameIdx == playerIdx && myStunCount > 0) {
-            isStunned = true;
-            return "LEFT";
-        }
+        int trackLength = gameInfo.gpu.length();
 
         // Check up to myPosition + 3 for potential obstacles
-        for (int i = myPosition + 1; i <= myPosition + 3 && i < trackLength; i++) {
-            if (obstacles.contains(i)) {
+        for (int i = gameInfo.myPosition + 1; i <= gameInfo.myPosition + 3 && i < trackLength; i++) {
+            if (gameInfo.obstacles.contains(i)) {
                 // If there's an obstacle, decide the best move
-                if (i + 1 < trackLength && gpu.charAt(i + 1) == '#') {
+                if (i + 1 < trackLength && gameInfo.gpu.charAt(i + 1) == '#') {
                     return "RIGHT";
-                } else if (i + 2 < trackLength && gpu.charAt(i + 2) == '#') {
+                } else if (i + 2 < trackLength && gameInfo.gpu.charAt(i + 2) == '#') {
                     return "DOWN";
                 } else {
                     return "UP";
@@ -116,7 +120,7 @@ class Player {
         }
 
         // If we can move up to myPosition + 3 without obstacles, move RIGHT
-        if (myPosition + 3 < trackLength && gpu.charAt(myPosition + 3) != '#') {
+        if (gameInfo.myPosition + 3 < trackLength && gameInfo.gpu.charAt(gameInfo.myPosition + 3) != '#') {
             return "RIGHT";
         }
 
