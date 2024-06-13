@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 class Player {
     private static List<Integer> obstacles = new ArrayList<>();
+    private static List<Integer> futureObstacles = new ArrayList<>();
     private static boolean isStunned = false;
     private static int playerIdx;
     private static int nbGames;
@@ -43,6 +44,9 @@ class Player {
             // Pre-calculate obstacles for the current player's GPU
             calculateObstacles(gpu[playerIdx]);
 
+            // Pre-calculate futurObstacles
+            updateFutureObstacles(gpu[playerIdx], registers[playerIdx][0]);
+
             // Choose the action for the current game state
             String direction = chooseDirection(gpu[playerIdx], registers[playerIdx][0], registers[playerIdx][3], 0);
 
@@ -57,6 +61,24 @@ class Player {
         for (int i = 0; i < trackLength; i++) {
             if (gpu.charAt(i) == '#') {
                 obstacles.add(i);
+            }
+        }
+    }
+
+    private static void updateFutureObstacles(String gpu, int myPosition) {
+        futureObstacles.clear();
+        int trackLength = gpu.length();
+
+        // Add current obstacles
+        for (int obstacle : obstacles) {
+            if (obstacle > myPosition) {
+                futureObstacles.add(obstacle);
+            }
+        }
+        // Analyze the track for new obstacles that you can see ahead
+        for (int i = myPosition; i < trackLength; i++) {
+            if (gpu.charAt(i) == '#') {
+                futureObstacles.add(i);
             }
         }
     }
