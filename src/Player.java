@@ -1,13 +1,18 @@
-class Player {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
-    static java.util.List<Integer> obstacles = new java.util.ArrayList<>();
-    static boolean isStunned = false;
+class Player {
+    private static List<Integer> obstacles = new ArrayList<>();
+    private static boolean isStunned = false;
+    private static int playerIdx;
+    private static int nbGames;
 
     public static void main(String args[]) {
-        java.util.Scanner in = new java.util.Scanner(System.in);
+        Scanner in = new Scanner(System.in);
 
-        int playerIdx = in.nextInt();
-        int nbGames = in.nextInt();
+        playerIdx = in.nextInt();
+        nbGames = in.nextInt();
         if (in.hasNextLine()) {
             in.nextLine(); // Consume newline character
         }
@@ -35,11 +40,11 @@ class Player {
                 }
             }
 
-            // Pre-calculate obstacles
+            // Pre-calculate obstacles for the current player's GPU
             calculateObstacles(gpu[playerIdx]);
 
             // Choose the action for the current game state
-            String direction = chooseDirection(playerIdx, gpu[playerIdx], registers[playerIdx][0], registers[playerIdx][3], 0);
+            String direction = chooseDirection(gpu[playerIdx], registers[playerIdx][0], registers[playerIdx][3], 0);
 
             // Output the chosen direction
             System.out.println(direction);
@@ -56,7 +61,7 @@ class Player {
         }
     }
 
-    private static String chooseDirection(int playerIdx, String gpu, int myPosition, int myStunCount, int gameIdx) {
+    private static String chooseDirection(String gpu, int myPosition, int myStunCount, int gameIdx) {
         // If stunned, do nothing
         if (isStunned && gameIdx == playerIdx) {
             return "LEFT";
