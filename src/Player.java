@@ -2,6 +2,8 @@ import java.util.*;
 
 class Player {
 
+    static List<Integer> obstacles = new ArrayList<>();
+
     public static void main(String args[]) {
         Scanner in = new Scanner(System.in);
         int playerIdx = in.nextInt();
@@ -31,11 +33,24 @@ class Player {
                 }
             }
 
+            // Pre-calculate obstacles
+            calculateObstacles(gpu[0]);
+
             // Choose the action for the current game state
             String direction = chooseDirection(playerIdx, gpu[0], registers[playerIdx][0], registers[playerIdx][3]);
 
             // Output the chosen direction
             System.out.println(direction);
+        }
+    }
+
+    private static void calculateObstacles(String gpu) {
+        obstacles.clear();
+        int trackLength = gpu.length();
+        for (int i = 0; i < trackLength; i++) {
+            if (gpu.charAt(i) == '#') {
+                obstacles.add(i);
+            }
         }
     }
 
@@ -48,28 +63,26 @@ class Player {
         // Check the track length
         int trackLength = gpu.length();
 
-        // Check the next cells for obstacles
-        if (myPosition < trackLength - 1) {
-            char nextCell = gpu.charAt(myPosition + 1);
-            if (nextCell == '#') {
-                // If next cell is a hurdle, jump over it (UP)
-                if (myPosition + 2 < trackLength) {
+        // Check up to myPosition + 3 for potential obstacles
+        for (int i = myPosition + 1; i <= myPosition + 3 && i < trackLength; i++) {
+            if (obstacles.contains(i)) {
+                // If there's an obstacle, decide the best move
+                if (i + 1 < trackLength && gpu.charAt(i + 1) == '#') {
+                    return "RIGHT";
+                } else if (i + 2 < trackLength && gpu.charAt(i + 2) == '#') {
+                    return "DOWN";
+                } else {
                     return "UP";
                 }
-            } else if (myPosition + 2 < trackLength && gpu.charAt(myPosition + 2) == '#') {
-                // If the cell after next is a hurdle, move two spaces to the right (RIGHT)
-                return "RIGHT";
-            } else if (myPosition + 3 < trackLength && gpu.charAt(myPosition + 3) == '#') {
-                // If the cell two spaces after next is a hurdle, move two spaces down (DOWN)
-                return "DOWN";
             }
+        }
+
+        // If we can move up to myPosition + 3 without obstacles, move RIGHT
+        if (myPosition + 3 < trackLength && gpu.charAt(myPosition + 3) != '#') {
+            return "RIGHT";
         }
 
         // Default action: move one space to the left (LEFT)
         return "LEFT";
     }
-}
-
-enum Action {
-    UP, DOWN, LEFT, RIGHT
 }
