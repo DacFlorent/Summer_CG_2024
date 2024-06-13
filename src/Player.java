@@ -41,14 +41,17 @@ class Player {
                 }
             }
 
+            // Update player's current position
+            int myPosition = registers[playerIdx][0];
+
             // Pre-calculate obstacles for the current player's GPU
             calculateObstacles(gpu[playerIdx]);
 
-            // Pre-calculate futurObstacles
-            updateFutureObstacles(gpu[playerIdx], registers[playerIdx][0]);
+            // Pre-calculate future obstacles
+            updateFutureObstacles(gpu[playerIdx], myPosition);
 
             // Choose the action for the current game state
-            String direction = chooseDirection(gpu[playerIdx], registers[playerIdx][0], registers[playerIdx][3], 0);
+            String direction = chooseDirection(gpu[playerIdx], myPosition, registers[playerIdx][3], 0);
 
             // Output the chosen direction
             System.out.println(direction);
