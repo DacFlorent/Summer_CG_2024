@@ -2,10 +2,6 @@ import java.util.*;
 import java.io.*;
 import java.math.*;
 
-/**
- * Auto-generated code below aims at helping you parse
- * the standard input according to the problem statement.
- **/
 class Player {
 
     public static void main(String args[]) {
@@ -58,31 +54,32 @@ class Player {
                     activeGames.add(gpu);
                 }
             }
-            int noObstaclesTillEnd = 0;
+
             int scoreRight = 0;
             int scoreDown = 0;
             int scoreLeft = 0;
             int scoreUp = 0;
             int scoreMax = 0;
 
+            // Count games where the player is facing a '#'
+            int gamesFacingHurdle = 0;
 
             // Perform actions with the active games
             for (String gpu : activeGames) {
-                int retourHurdle = gpu.indexOf("#");
-                if (retourHurdle != -1) {
-                    if (retourHurdle >= 3) {
-                        noObstaclesTillEnd++;
-                    }
+                int firstHurdle = gpu.indexOf("#");
 
-                    if (retourHurdle != 1) {
-                        if (retourHurdle >= 3) {
-                        }
+                if (firstHurdle == 0) {
+                    gamesFacingHurdle++;
+                }
+
+                if (firstHurdle != -1) {
+                    if (firstHurdle >= 3) {
                         scoreRight += 1;
                     }
-                    if (retourHurdle >= 2) {
+                    if (firstHurdle >= 2) {
                         scoreDown += 1;
                     }
-                    if (retourHurdle >= 1) {
+                    if (firstHurdle >= 1) {
                         scoreLeft += 1;
                     }
                 } else {
@@ -91,8 +88,8 @@ class Player {
                     scoreLeft += 1;
                 }
                 System.err.println("Active game: " + gpu);
-                // Actions pour chaque jeu actif
             }
+
             for (String gpu : activeGames) {
                 int retourHurdle = gpu.indexOf("#", 2);
                 if (retourHurdle != -1) {
@@ -101,17 +98,15 @@ class Player {
                     }
                 } else {
                     scoreUp += 1;
-
                 }
                 System.err.println("Active game: " + gpu);
-                // Actions pour chaque jeu actif
             }
-
 
             scoreMax = Math.max(scoreRight, Math.max(scoreLeft, Math.max(scoreDown, scoreUp)));
 
-            if (noObstaclesTillEnd >= 2) {
-                System.out.println("RIGHT");
+            // If in at least 3 out of the 4 races the player is facing a '#', always choose UP
+            if (gamesFacingHurdle >= 3) {
+                System.out.println("UP");
             } else {
                 if (scoreMax == scoreRight) {
                     System.out.println("RIGHT");
@@ -122,9 +117,7 @@ class Player {
                 } else {
                     System.out.println("LEFT");
                 }
-
             }
         }
-
     }
 }
