@@ -35,6 +35,7 @@ class Player {
                 int reg6 = in.nextInt();
                 in.nextLine();
 
+                int nbrObstacles = (int) gpu.chars().filter(ch -> ch == '#').count();
                 int stun = 0;
                 int positionPlayer = 0;
                 if (playerIdx == 0) {
@@ -48,7 +49,7 @@ class Player {
                     positionPlayer = reg2;
                 }
                 // Example condition to select active games based on playerIdx
-                if (!gpu.equals("GAME_OVER") || stun == 0) {
+                if (!gpu.equals("GAME_OVER") || stun == 0 || nbrObstacles > 5){
                     if (positionPlayer <= gpu.length()) {
                         activeGames.add(gpu.substring(positionPlayer));
                     } else {
