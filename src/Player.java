@@ -82,7 +82,7 @@ class Player {
                 // Actions pour chaque jeu actif
             }
             for (String gpu : activeGames) {
-                int retourHurdle = gpu.indexOf("#", 2);
+                int retourHurdle = gpu.indexOf("#", 1);
                 if (retourHurdle != -1) {
                     if (retourHurdle > 1) {
                         scoreUp += 1;
