@@ -95,6 +95,17 @@ class Player {
                 // Actions pour chaque jeu actif
             }
 
+            for (String gpu : activeGames) {
+                int retourHurdle = gpu.lastIndexOf("#");
+                if (retourHurdle != -1) {
+                    if (retourHurdle == 0) {
+                        scoreRight += 1;
+                    }
+                } else {
+                    scoreRight += 1;
+                }
+            }
+
             scoreMax = Math.max(scoreRight, Math.max(scoreDown, Math.max(scoreLeft, scoreUp)));
 
             if (scoreMax == scoreRight) {
