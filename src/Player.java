@@ -49,7 +49,10 @@ class Player {
                 }
                 // Example condition to select active games based on playerIdx
                 if (!gpu.equals("GAME_OVER") || stun == 0) {
+                    if (positionPlayer < gpu.length()) {}
                     activeGames.add(gpu.substring(positionPlayer));
+                } else {
+                    activeGames.add(gpu.substring(0));
                 }
             }
 
