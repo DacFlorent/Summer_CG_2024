@@ -22,8 +22,7 @@ class Player {
                 String scoreInfo = in.nextLine();
             }
 
-            String[] activeGames = new String[4]; // 4 games
-            int activeCount = 0;
+            List<String> activeGames = new ArrayList<>();
 
             for (int i = 0; i < nbGames; i++) {
                 String gpu = in.next();
@@ -38,16 +37,15 @@ class Player {
 
                 // Example condition to select active games based on playerIdx
                 if (reg0 == playerIdx || reg1 == playerIdx) {
-                    if (activeCount < 4) {
-                        activeGames[activeCount++] = gpu;
-                    }
+                    activeGames.add(gpu);
                 }
             }
 
+
             // Perform actions with the active games
-            for (int i = 0; i < activeCount; i++) {
-                System.err.println("Active game: " + activeGames[i]);
-                // Perform actions for each active game
+            for (String gpu : activeGames) {
+                System.err.println("Active game: " + gpu);
+                // Actions pour chaque jeu actif
             }
 
             System.out.println("LEFT");
