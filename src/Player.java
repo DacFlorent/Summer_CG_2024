@@ -70,13 +70,13 @@ class Player {
             for (String gpu : activeGames) {
                 int retourHurdle = gpu.indexOf("#");
                 if (retourHurdle != -1) {
-                    if (retourHurdle > 3) {
+                    if (retourHurdle >= 3) {
                         scoreRight += 1;
                     }
-                    if (retourHurdle > 2) {
+                    if (retourHurdle >= 2) {
                         scoreDown += 1;
                     }
-                    if (retourHurdle > 1) {
+                    if (retourHurdle >= 1) {
                         scoreLeft += 1;
                     }
                 } else {
@@ -102,14 +102,14 @@ class Player {
             }
 
 
-            scoreMax = Math.max(scoreRight, Math.max(scoreDown, Math.max(scoreLeft, scoreUp)));
+            scoreMax = Math.max(scoreRight, Math.max(scoreLeft, Math.max(scoreDown, scoreUp)));
 
             if (scoreMax == scoreRight) {
                 System.out.println("RIGHT");
-            } else if (scoreMax == scoreUp) {
-                System.out.println("UP");
             } else if (scoreMax == scoreDown) {
                 System.out.println("DOWN");
+            } else if (scoreMax == scoreUp) {
+                System.out.println("UP");
             } else {
                 System.out.println("LEFT");
             }
