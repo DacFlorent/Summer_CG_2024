@@ -49,10 +49,13 @@ class Player {
                 }
                 // Example condition to select active games based on playerIdx
                 if (!gpu.equals("GAME_OVER") || stun == 0) {
-                    if (positionPlayer < gpu.length()) {}
-                    activeGames.add(gpu.substring(positionPlayer));
+                    if (positionPlayer <= gpu.length()) {
+                        activeGames.add(gpu.substring(positionPlayer));
+                    } else {
+                        activeGames.add(gpu);
+                    }
                 } else {
-                    activeGames.add(gpu.substring(0));
+                    activeGames.add(gpu);
                 }
             }
 
@@ -85,7 +88,7 @@ class Player {
                 // Actions pour chaque jeu actif
             }
             for (String gpu : activeGames) {
-                int retourHurdle = gpu.indexOf("#", 1);
+                int retourHurdle = gpu.indexOf("#", 2);
                 if (retourHurdle != -1) {
                     if (retourHurdle > 1) {
                         scoreUp += 1;
