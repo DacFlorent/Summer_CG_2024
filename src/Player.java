@@ -58,7 +58,7 @@ class Player {
                     activeGames.add(gpu);
                 }
             }
-
+            int noObstaclesTillEnd = 0;
             int scoreRight = 0;
             int scoreDown = 0;
             int scoreLeft = 0;
@@ -71,6 +71,12 @@ class Player {
                 int retourHurdle = gpu.indexOf("#");
                 if (retourHurdle != -1) {
                     if (retourHurdle >= 3) {
+                        noObstaclesTillEnd++;
+                    }
+
+                    if (retourHurdle != 1) {
+                        if (retourHurdle >= 3) {
+                        }
                         scoreRight += 1;
                     }
                     if (retourHurdle >= 2) {
@@ -104,17 +110,21 @@ class Player {
 
             scoreMax = Math.max(scoreRight, Math.max(scoreLeft, Math.max(scoreDown, scoreUp)));
 
-            if (scoreMax == scoreRight) {
+            if (noObstaclesTillEnd >= 2) {
                 System.out.println("RIGHT");
-            } else if (scoreMax == scoreDown) {
-                System.out.println("DOWN");
-            } else if (scoreMax == scoreUp) {
-                System.out.println("UP");
             } else {
-                System.out.println("LEFT");
+                if (scoreMax == scoreRight) {
+                    System.out.println("RIGHT");
+                } else if (scoreMax == scoreDown) {
+                    System.out.println("DOWN");
+                } else if (scoreMax == scoreUp) {
+                    System.out.println("UP");
+                } else {
+                    System.out.println("LEFT");
+                }
+
             }
-
         }
-    }
 
+    }
 }
