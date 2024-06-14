@@ -35,20 +35,79 @@ class Player {
                 int reg6 = in.nextInt();
                 in.nextLine();
 
+                int stun = 0;
+                int positionPlayer = 0;
+                if (playerIdx == 0) {
+                    stun = reg3;
+                    positionPlayer = reg0;
+                } else if (playerIdx == 1) {
+                    stun = reg4;
+                    positionPlayer = reg1;
+                } else {
+                    stun = reg5;
+                    positionPlayer = reg2;
+                }
                 // Example condition to select active games based on playerIdx
-                if (reg0 == playerIdx || reg1 == playerIdx) {
-                    activeGames.add(gpu);
+                if (!gpu.equals("GAME_OVER") || stun == 0) {
+                    activeGames.add(gpu.substring(positionPlayer));
                 }
             }
+
+            int scoreRight = 0;
+            int scoreDown = 0;
+            int scoreLeft = 0;
+            int scoreUp = 0;
+            int scoreMax = 0;
 
 
             // Perform actions with the active games
             for (String gpu : activeGames) {
+                int retourHurdle = gpu.indexOf("#");
+                if (retourHurdle != -1) {
+                    if (retourHurdle > 3) {
+                        scoreRight += 1;
+                    }
+                    if (retourHurdle > 2) {
+                        scoreDown += 1;
+                    }
+                    if (retourHurdle > 1) {
+                        scoreLeft += 1;
+                    }
+                } else {
+                    scoreRight += 1;
+                    scoreDown += 1;
+                    scoreLeft += 1;
+                }
+                System.err.println("Active game: " + gpu);
+                // Actions pour chaque jeu actif
+            }
+            for (String gpu : activeGames) {
+                int retourHurdle = gpu.indexOf("#", 2);
+                if (retourHurdle != -1) {
+                    if (retourHurdle > 1) {
+                        scoreUp += 1;
+                    }
+                } else {
+                    scoreUp += 1;
+
+                }
                 System.err.println("Active game: " + gpu);
                 // Actions pour chaque jeu actif
             }
 
-            System.out.println("LEFT");
+            scoreMax = Math.max(scoreRight, Math.max(scoreDown, Math.max(scoreLeft, scoreUp)));
+
+            if (scoreMax == scoreRight) {
+                System.out.println("RIGHT");
+            } else if (scoreMax == scoreUp) {
+                System.out.println("UP");
+            } else if (scoreMax == scoreDown) {
+                System.out.println("DOWN");
+            } else {
+                System.out.println("LEFT");
+            }
+
         }
     }
+
 }
