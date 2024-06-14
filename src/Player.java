@@ -90,7 +90,7 @@ class Player {
             for (String gpu : activeGames) {
                 int retourHurdle = gpu.indexOf("#", 2);
                 if (retourHurdle != -1) {
-                    if (retourHurdle > 1) {
+                    if (retourHurdle >= 1) {
                         scoreUp += 1;
                     }
                 } else {
