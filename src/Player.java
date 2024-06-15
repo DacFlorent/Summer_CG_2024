@@ -90,10 +90,12 @@ class Player {
                     if (retourHurdle == 0) {
                         scoreUp +=1;
                     }
-                    if (retourHurdle == 1) {
+                    if (retourHurdle >= 1) {
                         scoreUp += 1;
-                    } if (retourHurdle == 2) {
+                    } if (retourHurdle >= 2) {
                         scoreLeft += 1;
+                    } if (retourHurdle >= 3) {
+                        scoreUp +=1;
                     }
 
                 } else {
