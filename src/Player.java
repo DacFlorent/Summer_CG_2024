@@ -85,14 +85,14 @@ class Player {
             }
 
             for (String gpu : activeGames) {
-                int retourHurdle = gpu.indexOf("#", firstHurdle + 1);
+                int retourHurdle = gpu.indexOf("#",2);
                 if (retourHurdle != -1) {
-                    if (retourHurdle > 3) {
+                    if (retourHurdle >= 2) {
                         scoreUp += 1;
                     }
                 } else {
                     scoreRight += 1;
-                    scoreDown += 1;
+                    scoreUp += 1;
                     scoreLeft += 1;
                 }
                 System.err.println("Active game: " + gpu);
