@@ -60,27 +60,20 @@ class Player {
             int scoreLeft = 0;
             int scoreUp = 0;
             int scoreMax = 0;
-            int Runtotheend = 0;
-            int gamesWithHurdleAtFourOrMore = 0;
+
 
             // Perform actions with the active games
             for (String gpu : activeGames) {
                 int firstHurdle = gpu.indexOf("#");
 
-                if (firstHurdle >= 4) {
-                    gamesWithHurdleAtFourOrMore += 1;
-                } else if (firstHurdle == -1) {
-                    Runtotheend += 1;
-                }
-
                 if (firstHurdle != -1) {
-                    if (firstHurdle >= 3) {
+                    if (firstHurdle == 3) {
                         scoreRight += 1;
                     }
-                    if (firstHurdle >= 2) {
+                    if (firstHurdle == 2) {
                         scoreDown += 1;
                     }
-                    if (firstHurdle >= 1) {
+                    if (firstHurdle == 1) {
                         scoreLeft += 1;
                     }
                 } else {
@@ -98,30 +91,26 @@ class Player {
                         scoreUp += 1;
                     }
                 } else {
-                    scoreUp += 1;
+                    scoreRight += 1;
+                    scoreDown += 1;
+                    scoreLeft += 1;
                 }
                 System.err.println("Active game: " + gpu);
             }
 
             scoreMax = Math.max(scoreRight, Math.max(scoreLeft, Math.max(scoreDown, scoreUp)));
+            
 
-            // If in at least 2 out of the 4 races the first '#' is at position 4 or more, always choose RIGHT
-            if (gamesWithHurdleAtFourOrMore >= 2) {
-                System.out.println("UP");
-            } else if (Runtotheend >= 2) {
+            if (scoreMax == scoreRight) {
                 System.out.println("RIGHT");
+            } else if (scoreMax == scoreDown) {
+                System.out.println("DOWN");
+            } else if (scoreMax == scoreUp) {
+                System.out.println("UP");
             } else {
-                if (scoreMax == scoreRight) {
-                    System.out.println("RIGHT");
-                } else if (scoreMax == scoreDown) {
-                    System.out.println("DOWN");
-                } else if (scoreMax == scoreUp) {
-                    System.out.println("UP");
-                } else {
-                    System.out.println("LEFT");
-                }
+                System.out.println("LEFT");
             }
-
         }
+
     }
 }
