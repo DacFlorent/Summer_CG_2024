@@ -60,22 +60,14 @@ class Player {
             int scoreLeft = 0;
             int scoreUp = 0;
             int scoreMax = 0;
-            int Runtotheend =  0;
-            // Count games where the player is facing a '#'
-            int gamesFacingHurdle = 0;
-
-            // Count games where the first '#' is at position 4 or more
+            int Runtotheend = 0;
             int gamesWithHurdleAtFourOrMore = 0;
 
             // Perform actions with the active games
             for (String gpu : activeGames) {
                 int firstHurdle = gpu.indexOf("#");
 
-                if (firstHurdle == 0) {
-                    gamesFacingHurdle +=1;
-                }
-
-                if (firstHurdle > 4) {
+                if (firstHurdle >= 4) {
                     gamesWithHurdleAtFourOrMore += 1;
                 } else if (firstHurdle == -1) {
                     Runtotheend += 1;
@@ -113,12 +105,8 @@ class Player {
 
             scoreMax = Math.max(scoreRight, Math.max(scoreLeft, Math.max(scoreDown, scoreUp)));
 
-            // If in at least 3 out of the 4 races the player is facing a '#', always choose UP
-            if (gamesFacingHurdle >= 2) {
-                System.out.println("UP");
-            }
             // If in at least 2 out of the 4 races the first '#' is at position 4 or more, always choose RIGHT
-            else if (gamesWithHurdleAtFourOrMore >= 2) {
+            if (gamesWithHurdleAtFourOrMore >= 2) {
                 System.out.println("UP");
             } else if (Runtotheend >= 2) {
                 System.out.println("RIGHT");
