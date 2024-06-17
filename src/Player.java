@@ -18,7 +18,7 @@ class Player {
                 String scoreInfo = in.nextLine();
             }
 
-            List<String> activeGames = new ArrayList<>();
+            Hurdle hurdle = new Hurdle();
 
             for (int i = 0; i < nbGames; i++) {
                 String gpu = in.next();
@@ -34,6 +34,7 @@ class Player {
                 int stun = 0;
                 int positionPlayer = 0;
                 System.err.println("Player ID : " + playerIdx);
+                List<String> activeGames = new ArrayList<>();
                 if (playerIdx == 0) {
                     stun = reg3;
                     positionPlayer = reg0;
@@ -50,54 +51,13 @@ class Player {
                         activeGames.add(gpu.substring(positionPlayer));
                     }
                 }
+                hurdle.activeGames = activeGames;
             }
 
-            int scoreRight = 0;
-            int scoreDown = 0;
-            int scoreLeft = 0;
-            int scoreUp = 0;
-            int scoreMax = 0;
+            ScoreAction scores = hurdle.compute();
 
-
-            // Perform actions with the active games
-            for (String gpu : activeGames) {
-                int firstHurdle = gpu.indexOf("#", 1);
-
-                if (firstHurdle != -1) {
-                    if (firstHurdle > 3) {
-                        scoreRight += 1;
-                    }
-                    if (firstHurdle > 1) {
-                        scoreLeft += 1;
-                    }
-                    if (firstHurdle > 2) {
-                        scoreDown += 1;
-                    }
-
-                } else {
-                    scoreRight += 1;
-                    scoreDown += 1;
-                    scoreLeft += 1;
-                }
-
-
-                int retourHurdle = gpu.indexOf("#", 2);
-                System.err.println("gpu " + gpu + "retourHurdle " + retourHurdle);
-                if (retourHurdle != -1) {
-
-                    if (retourHurdle > 2) {
-                        scoreUp += 1;
-                    }
-
-
-                } else {
-                    scoreUp += 1;
-                }
-                System.err.println("Active game: " + gpu);
-            }
-
-            scoreMax = Math.max(scoreRight, Math.max(scoreLeft, Math.max(scoreDown, scoreUp)));
-            System.err.println("scoreUp : " + scoreUp + " scoreLeft : " + scoreLeft + " scoreDown : " + scoreDown + " scoreRight : " + scoreRight);
+            int scoreMax = Math.max(scores.scoreRight, Math.max(scores.scoreLeft, Math.max(scores.scoreDown, scores.scoreUp)));
+            System.err.println("scoreUp : " + scores.scoreUp + " scoreLeft : " + scores.scoreLeft + " scoreDown : " + scores.scoreDown + " scoreRight : " + scores.scoreRight);
 
             // exemple :    0 1 2 3 4 5 6 7 8 9 10
             //              . . # . . . # . # .
@@ -106,12 +66,11 @@ class Player {
             //              . . . # . # . # . .
 
 
-
-            if (scoreMax == scoreRight) {
+            if (scoreMax == scores.scoreRight) {
                 System.out.println("RIGHT");
-            } else if (scoreMax == scoreDown) {
+            } else if (scoreMax == scores.scoreDown) {
                 System.out.println("DOWN");
-            } else if (scoreMax == scoreUp) {
+            } else if (scoreMax == scores.scoreUp) {
                 System.out.println("UP");
             } else {
                 System.out.println("LEFT");
@@ -119,4 +78,72 @@ class Player {
         }
 
     }
+}
+
+class Hurdle {
+    public List<String> activeGames;
+
+    public ScoreAction compute() {
+        int scoreRight = 0;
+        int scoreDown = 0;
+        int scoreLeft = 0;
+        int scoreUp = 0;
+        int scoreMax = 0;
+
+
+        // Perform actions with the active games
+        for (String gpu : activeGames) {
+            int firstHurdle = gpu.indexOf("#", 1);
+
+            if (firstHurdle != -1) {
+                if (firstHurdle > 3) {
+                    scoreRight += 1;
+                }
+                if (firstHurdle > 1) {
+                    scoreLeft += 1;
+                }
+                if (firstHurdle > 2) {
+                    scoreDown += 1;
+                }
+
+            } else {
+                scoreRight += 1;
+                scoreDown += 1;
+                scoreLeft += 1;
+            }
+
+
+            int retourHurdle = gpu.indexOf("#", 2);
+            System.err.println("gpu " + gpu + "retourHurdle " + retourHurdle);
+            if (retourHurdle != -1) {
+
+                if (retourHurdle > 2) {
+                    scoreUp += 1;
+                }
+
+
+            } else {
+                scoreUp += 1;
+            }
+            System.err.println("Active game: " + gpu);
+        }
+        ScoreAction scoreAction = new ScoreAction();
+        scoreAction.scoreRight = scoreRight;
+        scoreAction.scoreDown = scoreDown;
+        scoreAction.scoreLeft = scoreLeft;
+        scoreAction.scoreUp = scoreUp;
+        return scoreAction;
+    }
+
+}
+
+class ScoreAction {
+    public int scoreLeft = 0;
+    public int scoreRight = 0;
+    public int scoreDown =0;
+    public int scoreUp = 0;
+}
+
+enum Action {
+    UP, DOWN, LEFT, RIGHT
 }
