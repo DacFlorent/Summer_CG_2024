@@ -33,6 +33,7 @@ class Player {
 
                 int stun = 0;
                 int positionPlayer = 0;
+                System.err.println("Player ID : " + playerIdx);
                 if (playerIdx == 0) {
                     stun = reg3;
                     positionPlayer = reg0;
@@ -44,14 +45,10 @@ class Player {
                     positionPlayer = reg2;
                 }
                 // Example condition to select active games based on playerIdx
-                if (!gpu.equals("GAME_OVER") || stun == 0) {
+                if (!gpu.equals("GAME_OVER") && stun == 0) {
                     if (positionPlayer <= gpu.length()) {
                         activeGames.add(gpu.substring(positionPlayer));
-                    } else {
-                        activeGames.add(gpu);
                     }
-                } else {
-                    activeGames.add(gpu);
                 }
             }
 
@@ -64,47 +61,50 @@ class Player {
 
             // Perform actions with the active games
             for (String gpu : activeGames) {
-                int firstHurdle = gpu.indexOf("#");
+                int firstHurdle = gpu.indexOf("#", 1);
 
                 if (firstHurdle != -1) {
-                    if (firstHurdle >= 3) {
+                    if (firstHurdle > 3) {
                         scoreRight += 1;
                     }
-                    if (firstHurdle >= 2) {
-                        scoreUp += 1;
-                    }
-                    if (firstHurdle >= 1) {
+                    if (firstHurdle > 1) {
                         scoreLeft += 1;
                     }
+                    if (firstHurdle > 2) {
+                        scoreDown += 1;
+                    }
+
                 } else {
                     scoreRight += 1;
-                    scoreUp += 1;
+                    scoreDown += 1;
                     scoreLeft += 1;
                 }
-                System.err.println("Active game: " + gpu);
-            }
 
-            for (String gpu : activeGames) {
-                int retourHurdle = gpu.indexOf("#",2);
+
+                int retourHurdle = gpu.indexOf("#", 2);
+                System.err.println("gpu " + gpu + "retourHurdle " + retourHurdle);
                 if (retourHurdle != -1) {
-                    if (retourHurdle == 0) {
-                        scoreUp +=1;
-                    }
-                    if (retourHurdle >= 1) {
+
+                    if (retourHurdle > 2) {
                         scoreUp += 1;
-                    } if (retourHurdle >= 2) {
-                        scoreLeft += 1;
-                    } if (retourHurdle >= 3) {
-                        scoreUp +=1;
                     }
+
 
                 } else {
-                    scoreRight += 1;
+                    scoreUp += 1;
                 }
                 System.err.println("Active game: " + gpu);
             }
 
             scoreMax = Math.max(scoreRight, Math.max(scoreLeft, Math.max(scoreDown, scoreUp)));
+            System.err.println("scoreUp : " + scoreUp + " scoreLeft : " + scoreLeft + " scoreDown : " + scoreDown + " scoreRight : " + scoreRight);
+
+            // exemple :    0 1 2 3 4 5 6 7 8 9 10
+            //              . . # . . . # . # .
+            //              . . . # . . # . . #
+            //              . . # . # . # . # .
+            //              . . . # . # . # . .
+
 
 
             if (scoreMax == scoreRight) {
