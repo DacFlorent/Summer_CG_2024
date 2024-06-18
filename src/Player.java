@@ -1,31 +1,17 @@
+import javax.swing.plaf.SplitPaneUI;
 import java.util.*;
 import java.io.*;
 import java.math.*;
 
 class Player {
-    public static int playerIdx;
-    public static int nbGames;
 
-
-    public static void initialisation(Scanner in) {
+    public static void main(String args[]) {
+        Scanner in = new Scanner(System.in);
         int playerIdx = in.nextInt();
         int nbGames = in.nextInt();
         if (in.hasNextLine()) {
             in.nextLine();
         }
-    }
-}
-
-class Main {
-
-    public static int scoreInfo;
-
-
-    public static void main(String args[]) {
-        Scanner in = new Scanner(System.in);
-        Player.initialisation(in);
-        in.close();
-
 
         // game loop
         while (true) {
@@ -33,13 +19,46 @@ class Main {
                 String scoreInfo = in.nextLine();
             }
 
-            Hurdle hurdle = new Hurdle();
-            GameLoop gameLoop = new GameLoop();
-            ScoreAction scores = hurdle.compute();
+            List<String> activeGames = new ArrayList<>();
+            List<Hurdle> hurdle = new ArrayList<>();
+            for (int i = 0; i < nbGames; i++) {
+                String gpu = in.next();
+                int reg0 = in.nextInt();
+                int reg1 = in.nextInt();
+                int reg2 = in.nextInt();
+                int reg3 = in.nextInt();
+                int reg4 = in.nextInt();
+                int reg5 = in.nextInt();
+                int reg6 = in.nextInt();
+                in.nextLine();
+                hurdle.add(new Hurdle(gpu, reg0, reg1, reg2, reg3, reg4, reg5, reg6, playerIdx));
+            }
 
 
-            int scoreMax = Math.max(scores.scoreRight, Math.max(scores.scoreLeft, Math.max(scores.scoreDown, scores.scoreUp)));
-            System.err.println("scoreUp : " + scores.scoreUp + " scoreLeft : " + scores.scoreLeft + " scoreDown : " + scores.scoreDown + " scoreRight : " + scores.scoreRight);
+            int scoreRight = 0;
+            int scoreDown = 0;
+            int scoreLeft = 0;
+            int scoreUp = 0;
+            int scoreMax = 0;
+
+
+            // Perform actions with the active games
+            for (Hurdle hurdle1 : hurdle) {
+                ScoreAction scores = hurdle1.compute();
+                scoreRight += scores.scoreRight;
+                scoreDown += scores.scoreDown;
+                scoreLeft += scores.scoreLeft;
+                scoreUp += scores.scoreUp;
+            }
+
+
+
+
+
+
+
+            scoreMax = Math.max(scoreRight, Math.max(scoreLeft, Math.max(scoreDown, scoreUp)));
+            System.err.println("scoreUp : " + scoreUp + " scoreLeft : " + scoreLeft + " scoreDown : " + scoreDown + " scoreRight : " + scoreRight);
 
             // exemple :    0 1 2 3 4 5 6 7 8 9 10
             //              . . # . . . # . # .
@@ -48,11 +67,12 @@ class Main {
             //              . . . # . # . # . .
 
 
-            if (scoreMax == scores.scoreRight) {
+
+            if (scoreMax == scoreRight) {
                 System.out.println("RIGHT");
-            } else if (scoreMax == scores.scoreDown) {
+            } else if (scoreMax == scoreDown) {
                 System.out.println("DOWN");
-            } else if (scoreMax == scores.scoreUp) {
+            } else if (scoreMax == scoreUp) {
                 System.out.println("UP");
             } else {
                 System.out.println("LEFT");
@@ -61,12 +81,34 @@ class Main {
 
     }
 }
-
 class Hurdle {
     public List<String> activeGames;
     public static int firstHurdle;
     public static int retourHurdle;
 
+    public Hurdle(String gpu, int reg0, int reg1, int reg2, int reg3, int reg4, int reg5, int reg6, int playerIdx) {
+
+        int stun = 0;
+        int positionPlayer = 0;
+        if (playerIdx == 0) {
+            stun = reg3;
+            positionPlayer = reg0;
+        } else if (playerIdx == 1) {
+            stun = reg4;
+            positionPlayer = reg1;
+        } else {
+            stun = reg5;
+            positionPlayer = reg2;
+        }
+        System.err.println("Player ID : " + playerIdx);
+
+        // Example condition to select active games based on playerIdx
+        if (!gpu.equals("GAME_OVER") && stun == 0) {
+            if (positionPlayer <= gpu.length()) {
+                activeGames.add(gpu.substring(positionPlayer));
+            }
+        }
+    }
     public ScoreAction compute() {
         int scoreRight = 0;
         int scoreDown = 0;
@@ -118,62 +160,13 @@ class Hurdle {
         scoreAction.scoreUp = scoreUp;
         return scoreAction;
     }
-
 }
-
-class GameLoop {
-    public static int stun;
-    public static int positionPlayer;
-
-
-    public GameLoop(String gpu, int reg0, int reg1, int reg2, int reg3, int reg4, int reg5, int reg6) {
-        Main.main();
-        for (int i = 0; i < Player.nbGames; i++) {
-            gpu = in.next();
-            reg0 = in.nextInt();
-            reg1 = in.nextInt();
-            reg2 = in.nextInt();
-            reg3 = in.nextInt();
-            reg4 = in.nextInt();
-            reg5 = in.nextInt();
-            reg6 = in.nextInt();
-            in.nextLine();
-        }
-        Player.initialisation(in);
-
-        stun = 0;
-        positionPlayer = 0;
-        System.err.println("Player ID : " + playerIdx);
-        List<String> activeGames = new ArrayList<>();
-        if (playerIdx == 0) {
-            stun = reg3;
-            positionPlayer = reg0;
-        } else if (playerIdx == 1) {
-            stun = reg4;
-            positionPlayer = reg1;
-        } else {
-            stun = reg5;
-            positionPlayer = reg2;
-        }
-        // Example condition to select active games based on playerIdx
-        if (!gpu.equals("GAME_OVER") && stun == 0) {
-            if (positionPlayer <= gpu.length()) {
-                activeGames.add(gpu.substring(positionPlayer));
-            }
-        }
-        hurdle.activeGames = activeGames;
-
-    }
-}
-
 class ScoreAction {
     public int scoreLeft = 0;
     public int scoreRight = 0;
     public int scoreDown = 0;
     public int scoreUp = 0;
 }
-
-
 enum Action {
     UP, DOWN, LEFT, RIGHT
 }
