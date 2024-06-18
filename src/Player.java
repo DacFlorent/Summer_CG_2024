@@ -3,14 +3,29 @@ import java.io.*;
 import java.math.*;
 
 class Player {
+    public static int playerIdx;
+    public static int nbGames;
 
-    public static void main(String args[]) {
-        Scanner in = new Scanner(System.in);
+
+    public static void initialisation(Scanner in) {
         int playerIdx = in.nextInt();
         int nbGames = in.nextInt();
         if (in.hasNextLine()) {
             in.nextLine();
         }
+    }
+}
+
+class Main {
+
+    public static int scoreInfo;
+
+
+    public static void main(String args[]) {
+        Scanner in = new Scanner(System.in);
+        Player.initialisation(in);
+        in.close();
+
 
         // game loop
         while (true) {
@@ -19,42 +34,9 @@ class Player {
             }
 
             Hurdle hurdle = new Hurdle();
-
-            for (int i = 0; i < nbGames; i++) {
-                String gpu = in.next();
-                int reg0 = in.nextInt();
-                int reg1 = in.nextInt();
-                int reg2 = in.nextInt();
-                int reg3 = in.nextInt();
-                int reg4 = in.nextInt();
-                int reg5 = in.nextInt();
-                int reg6 = in.nextInt();
-                in.nextLine();
-
-                int stun = 0;
-                int positionPlayer = 0;
-                System.err.println("Player ID : " + playerIdx);
-                List<String> activeGames = new ArrayList<>();
-                if (playerIdx == 0) {
-                    stun = reg3;
-                    positionPlayer = reg0;
-                } else if (playerIdx == 1) {
-                    stun = reg4;
-                    positionPlayer = reg1;
-                } else {
-                    stun = reg5;
-                    positionPlayer = reg2;
-                }
-                // Example condition to select active games based on playerIdx
-                if (!gpu.equals("GAME_OVER") && stun == 0) {
-                    if (positionPlayer <= gpu.length()) {
-                        activeGames.add(gpu.substring(positionPlayer));
-                    }
-                }
-                hurdle.activeGames = activeGames;
-            }
-
+            GameLoop gameLoop = new GameLoop();
             ScoreAction scores = hurdle.compute();
+
 
             int scoreMax = Math.max(scores.scoreRight, Math.max(scores.scoreLeft, Math.max(scores.scoreDown, scores.scoreUp)));
             System.err.println("scoreUp : " + scores.scoreUp + " scoreLeft : " + scores.scoreLeft + " scoreDown : " + scores.scoreDown + " scoreRight : " + scores.scoreRight);
@@ -82,6 +64,8 @@ class Player {
 
 class Hurdle {
     public List<String> activeGames;
+    public static int firstHurdle;
+    public static int retourHurdle;
 
     public ScoreAction compute() {
         int scoreRight = 0;
@@ -93,7 +77,7 @@ class Hurdle {
 
         // Perform actions with the active games
         for (String gpu : activeGames) {
-            int firstHurdle = gpu.indexOf("#", 1);
+            firstHurdle = gpu.indexOf("#", 1);
 
             if (firstHurdle != -1) {
                 if (firstHurdle > 3) {
@@ -113,7 +97,7 @@ class Hurdle {
             }
 
 
-            int retourHurdle = gpu.indexOf("#", 2);
+            retourHurdle = gpu.indexOf("#", 2);
             System.err.println("gpu " + gpu + "retourHurdle " + retourHurdle);
             if (retourHurdle != -1) {
 
@@ -137,12 +121,58 @@ class Hurdle {
 
 }
 
+class GameLoop {
+    public static int stun;
+    public static int positionPlayer;
+
+
+    public GameLoop(String gpu, int reg0, int reg1, int reg2, int reg3, int reg4, int reg5, int reg6) {
+        Main.main();
+        for (int i = 0; i < Player.nbGames; i++) {
+            gpu = in.next();
+            reg0 = in.nextInt();
+            reg1 = in.nextInt();
+            reg2 = in.nextInt();
+            reg3 = in.nextInt();
+            reg4 = in.nextInt();
+            reg5 = in.nextInt();
+            reg6 = in.nextInt();
+            in.nextLine();
+        }
+        Player.initialisation(in);
+
+        stun = 0;
+        positionPlayer = 0;
+        System.err.println("Player ID : " + playerIdx);
+        List<String> activeGames = new ArrayList<>();
+        if (playerIdx == 0) {
+            stun = reg3;
+            positionPlayer = reg0;
+        } else if (playerIdx == 1) {
+            stun = reg4;
+            positionPlayer = reg1;
+        } else {
+            stun = reg5;
+            positionPlayer = reg2;
+        }
+        // Example condition to select active games based on playerIdx
+        if (!gpu.equals("GAME_OVER") && stun == 0) {
+            if (positionPlayer <= gpu.length()) {
+                activeGames.add(gpu.substring(positionPlayer));
+            }
+        }
+        hurdle.activeGames = activeGames;
+
+    }
+}
+
 class ScoreAction {
     public int scoreLeft = 0;
     public int scoreRight = 0;
-    public int scoreDown =0;
+    public int scoreDown = 0;
     public int scoreUp = 0;
 }
+
 
 enum Action {
     UP, DOWN, LEFT, RIGHT
