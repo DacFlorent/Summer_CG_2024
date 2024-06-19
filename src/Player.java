@@ -128,7 +128,7 @@ class Diving implements Game {
                 activeGames = "";
             }
         }
-        playerPosition = 1;
+        playerPosition = 0;
     }
 
     @Override
@@ -140,24 +140,25 @@ class Diving implements Game {
         int scoreMax = 0;
 
         if (activeGames != null && playerPosition < activeGames.length()) {
+            while (playerPosition < activeGames.length()) {
+                char nextMoove = activeGames.charAt(0);
+                moove = nextMoove;
+                if (nextMoove == 'U') {
+                    scoreUp += 1;
+                } else if (nextMoove == 'R') {
+                    scoreRight += 1;
+                } else if (nextMoove == 'L') {
+                    scoreLeft += 1;
+                } else {
+                    scoreDown += 1;
+                }
 
-            char nextMoove = activeGames.charAt(0);
-            moove = nextMoove;
-            if (nextMoove == 'U') {
-                scoreUp += 1;
-            } else if (nextMoove == 'R') {
-                scoreRight += 1;
-            } else if (nextMoove == 'L') {
-                scoreLeft += 1;
-            } else {
-                scoreDown += 1;
+                System.err.println("NextMoove: " + nextMoove);
+                playerPosition++;
+                System.err.println("playerPosition :" + playerPosition);
+
+
             }
-
-            System.err.println("NextMoove: " + nextMoove);
-            playerPosition++;
-            System.err.println("playerPosition :" + playerPosition);
-
-
         }
 
         ScoreAction scoreAction = new ScoreAction();
