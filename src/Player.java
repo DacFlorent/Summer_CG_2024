@@ -19,7 +19,7 @@ class Player {
                 String scoreInfo = in.nextLine();
             }
 
-            List<Hurdle> hurdle = new ArrayList<>();
+            List<Game> games = new ArrayList<>();
             for (int i = 0; i < nbGames; i++) {
                 String gpu = in.next();
                 int reg0 = in.nextInt();
@@ -30,7 +30,14 @@ class Player {
                 int reg5 = in.nextInt();
                 int reg6 = in.nextInt();
                 in.nextLine();
-                hurdle.add(new Hurdle(gpu, reg0, reg1, reg2, reg3, reg4, reg5, reg6, playerIdx));
+
+                if (i == 0) {
+                    games.add(new Hurdle(gpu, reg0, reg1, reg2, reg3, reg4, reg5, reg6, playerIdx));
+                } else if (i == 1) {
+                    games.add(new Bow());
+                } else if (i == 3) {
+                    games.add(new Diving());
+                }
             }
 
 
@@ -42,7 +49,7 @@ class Player {
 
 
             // Perform actions with the active games
-            for (Hurdle scorehurdle : hurdle) {
+            for (Game scorehurdle : games) {
                 ScoreAction scores = scorehurdle.compute();
                 scoreRight += scores.scoreRight;
                 scoreDown += scores.scoreDown;
@@ -75,7 +82,27 @@ class Player {
     }
 }
 
-class Hurdle {
+interface Game {
+    ScoreAction compute();
+}
+
+class Bow implements Game {
+
+    @Override
+    public ScoreAction compute() {
+        return null;
+    }
+}
+
+class Diving implements Game {
+
+    @Override
+    public ScoreAction compute() {
+        return null;
+    }
+}
+
+class Hurdle implements Game {
     public String activeGames;
     public static int firstHurdle;
     public static int retourHurdle;
@@ -94,7 +121,7 @@ class Hurdle {
             stun = reg5;
             positionPlayer = reg2;
         }
-        System.err.println("Player ID : " + playerIdx);
+
 
         // Example condition to select active games based on playerIdx
         if (!gpu.equals("GAME_OVER") && stun == 0) {
