@@ -56,6 +56,13 @@ class Player {
                 scoreLeft += scores.scoreLeft;
                 scoreUp += scores.scoreUp;
             }
+            for (Game scorediving : games) {
+                ScoreAction scores = scorediving.compute();
+                scoreRight += scores.scoreRight;
+                scoreDown += scores.scoreDown;
+                scoreLeft += scores.scoreLeft;
+                scoreUp += scores.scoreUp;
+            }
 
 
             scoreMax = Math.max(scoreRight, Math.max(scoreLeft, Math.max(scoreDown, scoreUp)));
