@@ -140,22 +140,22 @@ class Diving implements Game {
         int scoreMax = 0;
 
         if (activeGames != null && playerPosition < activeGames.length()) {
-            for (int i = playerPosition; i < activeGames.length(); i++) {
-                char nextMoove = activeGames.charAt(playerPosition);
-                moove = nextMoove;
-                if (nextMoove == 'U') {
-                    scoreUp += 1;
-                } else if (nextMoove == 'R') {
-                    scoreRight += 1;
-                } else if (nextMoove == 'L') {
-                    scoreLeft += 1;
-                } else {
-                    scoreDown += 1;
-                }
 
-                System.err.println("Move at index " + i + ": " + nextMoove);
+            char nextMoove = activeGames.charAt(playerPosition);
+            moove = nextMoove;
+            if (nextMoove == 'U') {
+                scoreUp += 1;
+            } else if (nextMoove == 'R') {
+                scoreRight += 1;
+            } else if (nextMoove == 'L') {
+                scoreLeft += 1;
+            } else {
+                scoreDown += 1;
             }
-            playerPosition = playerPosition + 1;
+
+            System.err.println("NextMoove: " + nextMoove);
+
+            ;
         }
 
         ScoreAction scoreAction = new ScoreAction();
