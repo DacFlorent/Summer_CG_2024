@@ -98,7 +98,7 @@ class Hurdle {
 
         // Example condition to select active games based on playerIdx
         if (!gpu.equals("GAME_OVER") && stun == 0) {
-            if (positionPlayer <= gpu.length()) {
+            if (positionPlayer <= gpu.length() && positionPlayer >= 0) {
                 activeGames = gpu.substring(positionPlayer);
             } else {
                 activeGames = "";
