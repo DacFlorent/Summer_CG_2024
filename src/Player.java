@@ -122,13 +122,13 @@ class Diving implements Game {
 
 
         if (!gpu.equals("GAME_OVER") && combo >= 0) {
-            if (pointsPlayer <= gpu.length() && pointsPlayer >= 0) {
-                activeGames = gpu.substring(pointsPlayer);
+            if (pointsPlayer <= gpu.length() && pointsPlayer > 0) {
+                activeGames = gpu.substring(pointsPlayer - 1);
             } else {
                 activeGames = "";
             }
         }
-        playerPosition = 0;
+        playerPosition = 1;
     }
 
     @Override
@@ -155,7 +155,7 @@ class Diving implements Game {
 
             System.err.println("NextMoove: " + nextMoove);
 
-            ;
+
         }
 
         ScoreAction scoreAction = new ScoreAction();
