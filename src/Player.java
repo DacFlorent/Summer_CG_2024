@@ -103,6 +103,7 @@ class Bow implements Game {
 class Diving implements Game {
     public String activeGames;
     public static int moove;
+    public int playerPosition;
 
     public Diving(String gpu, int reg0, int reg1, int reg2, int reg3, int reg4, int reg5, int reg6, int playerIdx) {
 
@@ -127,6 +128,7 @@ class Diving implements Game {
                 activeGames = "";
             }
         }
+        playerPosition = 0;
     }
 
     @Override
@@ -137,9 +139,9 @@ class Diving implements Game {
         int scoreUp = 0;
         int scoreMax = 0;
 
-        if (activeGames != null && !activeGames.isEmpty()) {
-            for (int i = 0; i < activeGames.length(); i++) {
-                char nextMoove = activeGames.charAt(i);
+        if (activeGames != null && playerPosition < activeGames.length()) {
+            for (int i = playerPosition; i < activeGames.length(); i++) {
+                char nextMoove = activeGames.charAt(playerPosition);
                 moove = nextMoove;
                 if (nextMoove == 'U') {
                     scoreUp += 1;
@@ -153,6 +155,7 @@ class Diving implements Game {
 
                 System.err.println("Move at index " + i + ": " + nextMoove);
             }
+            playerPosition = playerPosition + 1;
         }
 
         ScoreAction scoreAction = new ScoreAction();
