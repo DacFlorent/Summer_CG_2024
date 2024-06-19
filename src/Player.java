@@ -33,8 +33,7 @@ class Player {
 
                 if (i == 0) {
                     games.add(new Hurdle(gpu, reg0, reg1, reg2, reg3, reg4, reg5, reg6, playerIdx));
-                } else if (i == 1) {
-                    games.add(new Bow());
+
                 } else if (i == 3) {
                     games.add(new Diving(gpu, reg0, reg1, reg2, reg3, reg4, reg5, reg6, playerIdx));
                 }
@@ -140,7 +139,7 @@ class Diving implements Game {
 
         if (activeGames != null && activeGames.isEmpty()) {
             for (int i = 0; i < activeGames.length(); i++) {
-                char move = activeGames.charAt(i);
+                char moove = activeGames.charAt(i);
                 moove = activeGames.charAt(i);
                 if (moove == 'U') {
                     scoreUp += 1;
@@ -154,18 +153,18 @@ class Diving implements Game {
 
                 System.out.println("Move at index " + i + ": " + moove);
             }
-
-            ScoreAction scoreAction = new ScoreAction();
-            scoreAction.scoreRight = scoreRight;
-            scoreAction.scoreDown = scoreDown;
-            scoreAction.scoreLeft = scoreLeft;
-            scoreAction.scoreUp = scoreUp;
-            return scoreAction;
-
-
         }
-        return null;
+
+        ScoreAction scoreAction = new ScoreAction();
+        scoreAction.scoreRight = scoreRight;
+        scoreAction.scoreDown = scoreDown;
+        scoreAction.scoreLeft = scoreLeft;
+        scoreAction.scoreUp = scoreUp;
+        return scoreAction;
+
     }
+
+
 }
 
 class Hurdle implements Game {
