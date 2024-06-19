@@ -120,7 +120,7 @@ class Diving implements Game {
         }
 
 
-        if (!gpu.equals("GAME_OVER") && combo > 0) {
+        if (!gpu.equals("GAME_OVER") && combo >= 0) {
             if (pointsPlayer <= gpu.length() && pointsPlayer >= 0) {
                 activeGames = gpu.substring(pointsPlayer);
             } else {
@@ -137,21 +137,21 @@ class Diving implements Game {
         int scoreUp = 0;
         int scoreMax = 0;
 
-        if (activeGames != null && activeGames.isEmpty()) {
+        if (activeGames != null && !activeGames.isEmpty()) {
             for (int i = 0; i < activeGames.length(); i++) {
-                char moove = activeGames.charAt(i);
-                moove = activeGames.charAt(i);
-                if (moove == 'U') {
+                char nextMoove = activeGames.charAt(i);
+                moove = nextMoove;
+                if (nextMoove == 'U') {
                     scoreUp += 1;
-                } else if (moove == 'R') {
+                } else if (nextMoove == 'R') {
                     scoreRight += 1;
-                } else if (moove == 'L') {
+                } else if (nextMoove == 'L') {
                     scoreLeft += 1;
                 } else {
                     scoreDown += 1;
                 }
 
-                System.out.println("Move at index " + i + ": " + moove);
+                System.err.println("Move at index " + i + ": " + nextMoove);
             }
         }
 
@@ -240,7 +240,6 @@ class Hurdle implements Game {
             } else {
                 scoreUp += 1;
             }
-            System.err.println("Active game: " + activeGames);
         }
         ScoreAction scoreAction = new ScoreAction();
         scoreAction.scoreRight = scoreRight;
