@@ -36,7 +36,7 @@ class Player {
                 } else if (i == 1) {
                     games.add(new Bow());
                 } else if (i == 3) {
-                    games.add(new Diving());
+                    games.add(new Diving(gpu, reg0, reg1, reg2, reg3, reg4, reg5, reg6, playerIdx));
                 }
             }
 
@@ -96,6 +96,7 @@ class Bow implements Game {
 
 class Diving implements Game {
     public String activeGames;
+    public static int moove;
 
     public Diving(String gpu, int reg0, int reg1, int reg2, int reg3, int reg4, int reg5, int reg6, int playerIdx) {
 
@@ -107,19 +108,55 @@ class Diving implements Game {
         } else if (playerIdx == 1) {
             combo = reg4;
             pointsPlayer = reg1;
-        } else if (playerIdx == 2) {
+        } else {
             combo = reg5;
             pointsPlayer = reg2;
         }
 
 
-        if (!gpu.equals("GAME_OVER") && combo == 0) {
-            if (pointsPlayer == 0) {}
+        if (!gpu.equals("GAME_OVER") && combo > 0) {
+            if (pointsPlayer <= gpu.length() && pointsPlayer >= 0) {
+                activeGames = gpu.substring(pointsPlayer);
+            } else {
+                activeGames = "";
+            }
         }
     }
 
     @Override
     public ScoreAction compute() {
+        int scoreRight = 0;
+        int scoreDown = 0;
+        int scoreLeft = 0;
+        int scoreUp = 0;
+        int scoreMax = 0;
+
+        if (activeGames != null && activeGames.isEmpty()) {
+            for (int i = 0; i < activeGames.length(); i++) {
+                char move = activeGames.charAt(i);
+                moove = activeGames.charAt(i);
+                if (moove == 'U') {
+                    scoreUp += 1;
+                } else if (moove == 'R') {
+                    scoreRight += 1;
+                } else if (moove == 'L') {
+                    scoreLeft += 1;
+                } else {
+                    scoreDown += 1;
+                }
+
+                System.out.println("Move at index " + i + ": " + moove);
+            }
+
+            ScoreAction scoreAction = new ScoreAction();
+            scoreAction.scoreRight = scoreRight;
+            scoreAction.scoreDown = scoreDown;
+            scoreAction.scoreLeft = scoreLeft;
+            scoreAction.scoreUp = scoreUp;
+            return scoreAction;
+
+
+        }
         return null;
     }
 }
