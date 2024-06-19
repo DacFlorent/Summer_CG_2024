@@ -141,7 +141,7 @@ class Diving implements Game {
 
         if (activeGames != null && playerPosition < activeGames.length()) {
 
-            char nextMoove = activeGames.charAt(playerPosition);
+            char nextMoove = activeGames.charAt(0);
             moove = nextMoove;
             if (nextMoove == 'U') {
                 scoreUp += 1;
