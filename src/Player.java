@@ -32,7 +32,7 @@ class Player {
                 in.nextLine();
                 hurdle.add(new Hurdle(gpu, reg0, reg1, reg2, reg3, reg4, reg5, reg6, playerIdx));
             }
-            
+
 
             int scoreRight = 0;
             int scoreDown = 0;
@@ -103,8 +103,6 @@ class Hurdle {
             } else {
                 activeGames = "";
             }
-        } else {
-            activeGames = "";
         }
     }
 
