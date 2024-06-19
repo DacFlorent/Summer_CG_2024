@@ -154,6 +154,8 @@ class Diving implements Game {
             }
 
             System.err.println("NextMoove: " + nextMoove);
+            playerPosition++;
+            System.err.println("playerPosition :" + playerPosition);
 
 
         }
