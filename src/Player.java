@@ -95,6 +95,28 @@ class Bow implements Game {
 }
 
 class Diving implements Game {
+    public String activeGames;
+
+    public Diving(String gpu, int reg0, int reg1, int reg2, int reg3, int reg4, int reg5, int reg6, int playerIdx) {
+
+        int combo = 0;
+        int pointsPlayer = 0;
+        if (playerIdx == 0) {
+            combo = reg3;
+            pointsPlayer = reg0;
+        } else if (playerIdx == 1) {
+            combo = reg4;
+            pointsPlayer = reg1;
+        } else if (playerIdx == 2) {
+            combo = reg5;
+            pointsPlayer = reg2;
+        }
+
+
+        if (!gpu.equals("GAME_OVER") && combo == 0) {
+            if (pointsPlayer == 0) {}
+        }
+    }
 
     @Override
     public ScoreAction compute() {
