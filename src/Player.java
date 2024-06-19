@@ -19,7 +19,6 @@ class Player {
                 String scoreInfo = in.nextLine();
             }
 
-            String activeGames = "GAME_OVER";
             List<Hurdle> hurdle = new ArrayList<>();
             for (int i = 0; i < nbGames; i++) {
                 String gpu = in.next();
@@ -33,9 +32,7 @@ class Player {
                 in.nextLine();
                 hurdle.add(new Hurdle(gpu, reg0, reg1, reg2, reg3, reg4, reg5, reg6, playerIdx));
             }
-
-            System.out.println("activeGames : " + activeGames);
-
+            
 
             int scoreRight = 0;
             int scoreDown = 0;
@@ -103,7 +100,11 @@ class Hurdle {
         if (!gpu.equals("GAME_OVER") && stun == 0) {
             if (positionPlayer <= gpu.length()) {
                 activeGames = gpu.substring(positionPlayer);
+            } else {
+                activeGames = "";
             }
+        } else {
+            activeGames = "";
         }
     }
 
