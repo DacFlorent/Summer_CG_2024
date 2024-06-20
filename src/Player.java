@@ -67,12 +67,6 @@ class Player {
             scoreMax = Math.max(scoreRight, Math.max(scoreLeft, Math.max(scoreDown, scoreUp)));
             System.err.println("scoreUp : " + scoreUp + " scoreLeft : " + scoreLeft + " scoreDown : " + scoreDown + " scoreRight : " + scoreRight);
 
-            // exemple :    0 1 2 3 4 5 6 7 8 9 10
-            //              . . # . . . # . # .
-            //              . . . # . . # . . #
-            //              . . # . # . # . # .
-            //              . . . # . # . # . .
-
 
             if (scoreMax == scoreRight) {
                 System.out.println("RIGHT");
@@ -122,8 +116,8 @@ class Diving implements Game {
 
 
         if (!gpu.equals("GAME_OVER") && combo >= 0) {
-            if (pointsPlayer <= gpu.length() && pointsPlayer > 0) {
-                activeGames = gpu.substring(pointsPlayer - 1);
+            if (playerPosition <= gpu.length() && pointsPlayer >= 0) {
+                activeGames = gpu.substring(playerPosition);
             } else {
                 activeGames = "";
             }
@@ -159,6 +153,7 @@ class Diving implements Game {
 
 
             }
+            playerPosition++;
         }
 
         ScoreAction scoreAction = new ScoreAction();
