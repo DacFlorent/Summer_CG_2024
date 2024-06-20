@@ -92,6 +92,7 @@ class Bow implements Game {
         this.positionX = 0;
         this.positionY = 0;
         this.windforce = 0;
+
         this.cursorPosition = new CursorPosition(0,0);
 
 
@@ -107,6 +108,7 @@ class Bow implements Game {
         }
 
         if (!gpu.equals("GAME_OVER") && windforce == 0) {
+            this.windforce = Character.getNumericValue(gpu.charAt(0));
             if (windforce <= gpu.length() && windforce >= 0) {
                 activeGames = gpu.substring(windforce);
             } else {
@@ -126,7 +128,7 @@ class Bow implements Game {
 
 
         if (activeGames != null && cursorPosition.positionX < activeGames.length()){
-            windforce = activeGames.charAt(0);
+
         } if  (scoreMax == scoreRight) {
             cursorPosition.positionX += windforce;
         } else if (scoreMax == scoreDown) {
@@ -137,7 +139,7 @@ class Bow implements Game {
             cursorPosition.positionX -= windforce;
         }
 
-        System.err.println("windforce: " + windforce + " cursorPosition: " + cursorPosition);
+        System.err.println("windforce: " + windforce + " cursorPosition X : " + cursorPosition.positionX + " cursorPosition Y :" + cursorPosition.positionY);
 
 
         ScoreAction scoreAction = new ScoreAction();
