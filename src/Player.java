@@ -48,15 +48,8 @@ class Player {
 
 
             // Perform actions with the active games
-            for (Game scorehurdle : games) {
-                ScoreAction scores = scorehurdle.compute();
-                scoreRight += scores.scoreRight;
-                scoreDown += scores.scoreDown;
-                scoreLeft += scores.scoreLeft;
-                scoreUp += scores.scoreUp;
-            }
-            for (Game scorediving : games) {
-                ScoreAction scores = scorediving.compute();
+            for (Game game : games) {
+                ScoreAction scores = game.compute();
                 scoreRight += scores.scoreRight;
                 scoreDown += scores.scoreDown;
                 scoreLeft += scores.scoreLeft;
