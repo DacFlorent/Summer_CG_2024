@@ -128,8 +128,19 @@ class Bow implements Game {
 
 
         if (activeGames != null && cursorPosition.positionX < activeGames.length() || cursorPosition.positionY < activeGames.length()){
-
+            windforce = activeGames.charAt(0);
+        } if  (scoreMax == scoreRight) {
+            cursorPosition.positionX += windforce;
+        } else if (scoreMax == scoreDown) {
+            cursorPosition.positionY -= windforce;
+        } else if (scoreMax == scoreUp) {
+            cursorPosition.positionY += windforce;
+        } else if (scoreMax == scoreLeft) {
+            cursorPosition.positionX -= windforce;
         }
+
+        System.err.println("windforce: " + windforce + " cursorPosition: " + cursorPosition);
+
 
         ScoreAction scoreAction = new ScoreAction();
         scoreAction.scoreRight = scoreRight;
