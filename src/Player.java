@@ -33,9 +33,10 @@ class Player {
 
                 if (i == 0) {
                     games.add(new Hurdle(gpu, reg0, reg1, reg2, reg3, reg4, reg5, reg6, playerIdx));
-
                 } else if (i == 3) {
                     games.add(new Diving(gpu, reg0, reg1, reg2, reg3, reg4, reg5, reg6, playerIdx));
+                } else if (i == 1) {
+                    games.add(new Bow(gpu, reg0, reg1, reg2, reg3, reg4, reg5, reg6, playerIdx));
                 }
             }
 
@@ -80,11 +81,73 @@ interface Game {
 }
 
 class Bow implements Game {
+    public String activeGames;
+    public int positionX;
+    public int positionY;
+    public int windforce;
+    public CursorPosition cursorPosition;
+
+
+    public Bow(String gpu, int reg0, int reg1, int reg2, int reg3, int reg4, int reg5, int reg6, int playerIdx) {
+        this.positionX = 0;
+        this.positionY = 0;
+        this.windforce = 0;
+        int cursorPosition = 0;
+
+        this.cursorPosition = new CursorPosition(this.positionX, this.positionY);
+
+
+        if (playerIdx == 0) {
+            positionX = reg0;
+            positionY = reg1;
+        } else if (playerIdx == 1) {
+            positionX = reg2;
+            positionY = reg3;
+        } else {
+            positionX = reg4;
+            positionY = reg5;
+        }
+
+        if (!gpu.equals("GAME_OVER") && windforce == 0) {
+            if (cursorPosition <= gpu.length()) {
+                activeGames = gpu.substring(cursorPosition);
+            } else {
+                activeGames = "";
+            }
+
+        }
+    }
 
     @Override
     public ScoreAction compute() {
-        return null;
+        int scoreRight = 0;
+        int scoreDown = 0;
+        int scoreLeft = 0;
+        int scoreUp = 0;
+        int scoreMax = 0;
+
+
+        if (activeGames != null && cursorPosition.positionX < activeGames.length() || cursorPosition.positionY < activeGames.length()){
+
+        }
+
+        ScoreAction scoreAction = new ScoreAction();
+        scoreAction.scoreRight = scoreRight;
+        scoreAction.scoreDown = scoreDown;
+        scoreAction.scoreLeft = scoreLeft;
+        scoreAction.scoreUp = scoreUp;
+        return scoreAction;
     }
+    public static class CursorPosition {
+        public int positionX;
+        public int positionY;
+
+        public CursorPosition(int PositionX, int PositionY) {
+            this.positionX = Math.max(-20, Math.min(20, PositionX)); // voir pour l'intervalle [-20;20]
+            this.positionY = Math.max(-20, Math.min(20, PositionX)); // voir pour l'intervalle [-20;20]
+        }
+    }
+
 }
 
 class Diving implements Game {
@@ -138,24 +201,24 @@ class Diving implements Game {
 
             // Mettre à jour les scores en fonction du prochain mouvement
             if (nextMoove == 'U') {
-                if(this.combo > 2) {
+                if (this.combo > 2) {
                     scoreUp += 2;
                 } else {
                     scoreUp += 1;
                 }
             } else if (nextMoove == 'R') {
-                if(this.combo > 2) {
+                if (this.combo > 2) {
                     scoreRight += 2;
                 } else {
                     scoreRight += 1;
                 }
             } else if (nextMoove == 'L') {
-                if(this.combo > 2) {
+                if (this.combo > 2) {
                     scoreLeft += 2;
                 } else {
                     scoreLeft += 1;
                 }
-            } else if(this.combo > 2) {
+            } else if (this.combo > 2) {
                 scoreDown += 2;
             } else {
                 scoreDown += 1;
