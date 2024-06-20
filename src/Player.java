@@ -128,7 +128,6 @@ class Bow implements Game {
 
 
         if (activeGames != null && cursorPosition.positionX < activeGames.length()){
-
         } if  (scoreMax == scoreRight) {
             cursorPosition.positionX += windforce;
         } else if (scoreMax == scoreDown) {
@@ -139,7 +138,24 @@ class Bow implements Game {
             cursorPosition.positionX -= windforce;
         }
 
-        System.err.println("windforce: " + windforce + " cursorPosition X : " + cursorPosition.positionX + " cursorPosition Y :" + cursorPosition.positionY);
+        if (activeGames.equals("Bow")){
+            int centreX = 0 - cursorPosition.positionX;
+            int centreY = 0 - cursorPosition.positionY;
+
+            if (centreX > 0) {
+                scoreRight += 1;
+            } else if (centreX < 0) {
+                scoreLeft += 1;
+            } else if (centreY > 0) {
+                scoreUp += 1;
+            } else if (centreY < 0) {
+                scoreDown += 1;
+            }
+        }
+        
+
+
+        System.err.println("windforce: " + windforce);
 
 
         ScoreAction scoreAction = new ScoreAction();
