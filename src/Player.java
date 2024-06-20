@@ -138,31 +138,31 @@ class Diving implements Game {
 
             // Mettre à jour les scores en fonction du prochain mouvement
             if (nextMoove == 'U') {
-                scoreUp += 1;
+                if(this.combo > 2) {
+                    scoreUp += 2;
+                } else {
+                    scoreUp += 1;
+                }
             } else if (nextMoove == 'R') {
-                scoreRight += 1;
+                if(this.combo > 2) {
+                    scoreRight += 2;
+                } else {
+                    scoreRight += 1;
+                }
             } else if (nextMoove == 'L') {
-                scoreLeft += 1;
+                if(this.combo > 2) {
+                    scoreLeft += 2;
+                } else {
+                    scoreLeft += 1;
+                }
+            } else if(this.combo > 2) {
+                scoreDown += 2;
             } else {
                 scoreDown += 1;
             }
 
             System.err.println("NextMoove: " + nextMoove);
 
-            // Incrémenter la position du joueur
-            playerPosition++;
-            int comboValue = this.combo;
-            if (comboValue > 2) {
-                scoreRight += 2;
-                scoreDown += 2;
-                scoreLeft += 2;
-                scoreUp += 2;
-            } else {
-                scoreRight += 1;
-                scoreDown += 1;
-                scoreLeft += 1;
-                scoreUp += 1;
-            }
 
         }
 
