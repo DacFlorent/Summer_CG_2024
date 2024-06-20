@@ -92,9 +92,7 @@ class Bow implements Game {
         this.positionX = 0;
         this.positionY = 0;
         this.windforce = 0;
-        int cursorPosition = 0;
-
-        this.cursorPosition = new CursorPosition(this.positionX, this.positionY);
+        this.cursorPosition = new CursorPosition(0,0);
 
 
         if (playerIdx == 0) {
@@ -127,7 +125,7 @@ class Bow implements Game {
         int scoreMax = 0;
 
 
-        if (activeGames != null && cursorPosition.positionX < activeGames.length() || cursorPosition.positionY < activeGames.length()){
+        if (activeGames != null && cursorPosition.positionX < activeGames.length()){
             windforce = activeGames.charAt(0);
         } if  (scoreMax == scoreRight) {
             cursorPosition.positionX += windforce;
