@@ -93,7 +93,7 @@ class Bow implements Game {
         this.positionY = 0;
         this.windforce = 0;
 
-        this.cursorPosition = new CursorPosition(0,0);
+        this.cursorPosition = new CursorPosition(0, 0);
 
 
         if (playerIdx == 0) {
@@ -127,32 +127,22 @@ class Bow implements Game {
         int scoreMax = 0;
 
 
-        if (activeGames != null && cursorPosition.positionX < activeGames.length()){
-        } if  (scoreMax == scoreRight) {
-            cursorPosition.positionX += windforce;
-        } else if (scoreMax == scoreDown) {
-            cursorPosition.positionY -= windforce;
-        } else if (scoreMax == scoreUp) {
-            cursorPosition.positionY += windforce;
-        } else if (scoreMax == scoreLeft) {
-            cursorPosition.positionX -= windforce;
-        }
+        if (activeGames != null) {
+            
+                int centreX = 0 - cursorPosition.positionX;
+                int centreY = 0 - cursorPosition.positionY;
 
-        if (activeGames.equals("Bow")){
-            int centreX = 0 - cursorPosition.positionX;
-            int centreY = 0 - cursorPosition.positionY;
-
-            if (centreX > 0) {
-                scoreRight += 1;
-            } else if (centreX < 0) {
-                scoreLeft += 1;
-            } else if (centreY > 0) {
-                scoreUp += 1;
-            } else if (centreY < 0) {
-                scoreDown += 1;
+                if (centreX < 0) {
+                    scoreRight += 1;
+                } else if (centreX > 0) {
+                    scoreLeft += 1;
+                }
+                if (centreY < 0) {
+                    scoreUp += 1;
+                } else if (centreY > 0) {
+                    scoreDown += 1;
+                }
             }
-        }
-        
 
 
         System.err.println("windforce: " + windforce);
@@ -165,6 +155,7 @@ class Bow implements Game {
         scoreAction.scoreUp = scoreUp;
         return scoreAction;
     }
+
     public static class CursorPosition {
         public int positionX;
         public int positionY;
