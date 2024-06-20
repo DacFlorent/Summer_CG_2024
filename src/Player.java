@@ -91,6 +91,7 @@ class Diving implements Game {
     public String activeGames;
     public static int moove;
     public int playerPosition;
+    public int combo;
 
     public Diving(String gpu, int reg0, int reg1, int reg2, int reg3, int reg4, int reg5, int reg6, int playerIdx) {
 
@@ -99,19 +100,19 @@ class Diving implements Game {
 
 
         if (playerIdx == 0) {
-            combo = reg3;
+            this.combo = reg3;
             pointsPlayer = reg0;
         } else if (playerIdx == 1) {
-            combo = reg4;
+            this.combo = reg4;
             pointsPlayer = reg1;
         } else {
-            combo = reg5;
+            this.combo = reg5;
             pointsPlayer = reg2;
         }
 
         playerPosition = 0;
 
-        if (!gpu.equals("GAME_OVER") && combo >= 0) {
+        if (!gpu.equals("GAME_OVER") && this.combo >= 0) {
             if (playerPosition <= gpu.length() && pointsPlayer >= 0) {
                 activeGames = gpu.substring(playerPosition);
             } else {
@@ -150,6 +151,18 @@ class Diving implements Game {
 
             // Incrémenter la position du joueur
             playerPosition++;
+            int comboValue = this.combo;
+            if (comboValue > 2) {
+                scoreRight += 2;
+                scoreDown += 2;
+                scoreLeft += 2;
+                scoreUp += 2;
+            } else {
+                scoreRight += 1;
+                scoreDown += 1;
+                scoreLeft += 1;
+                scoreUp += 1;
+            }
 
         }
 
