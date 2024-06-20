@@ -109,8 +109,8 @@ class Bow implements Game {
         }
 
         if (!gpu.equals("GAME_OVER") && windforce == 0) {
-            if (cursorPosition <= gpu.length()) {
-                activeGames = gpu.substring(cursorPosition);
+            if (windforce <= gpu.length() && windforce >= 0) {
+                activeGames = gpu.substring(windforce);
             } else {
                 activeGames = "";
             }
