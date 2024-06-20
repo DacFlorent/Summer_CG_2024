@@ -103,6 +103,8 @@ class Diving implements Game {
 
         int combo = 0;
         int pointsPlayer = 0;
+
+
         if (playerIdx == 0) {
             combo = reg3;
             pointsPlayer = reg0;
@@ -114,6 +116,7 @@ class Diving implements Game {
             pointsPlayer = reg2;
         }
 
+        playerPosition = 0;
 
         if (!gpu.equals("GAME_OVER") && combo >= 0) {
             if (playerPosition <= gpu.length() && pointsPlayer >= 0) {
@@ -121,8 +124,9 @@ class Diving implements Game {
             } else {
                 activeGames = "";
             }
+
         }
-        playerPosition = 0;
+
     }
 
     @Override
@@ -134,26 +138,26 @@ class Diving implements Game {
         int scoreMax = 0;
 
         if (activeGames != null && playerPosition < activeGames.length()) {
-            while (playerPosition < activeGames.length()) {
-                char nextMoove = activeGames.charAt(0);
-                moove = nextMoove;
-                if (nextMoove == 'U') {
-                    scoreUp += 1;
-                } else if (nextMoove == 'R') {
-                    scoreRight += 1;
-                } else if (nextMoove == 'L') {
-                    scoreLeft += 1;
-                } else {
-                    scoreDown += 1;
-                }
+            // Obtenir le prochain mouvement à la position actuelle du joueur
+            char nextMoove = activeGames.charAt(0);
+            moove = nextMoove;
 
-                System.err.println("NextMoove: " + nextMoove);
-                playerPosition++;
-                System.err.println("playerPosition :" + playerPosition);
-
-
+            // Mettre à jour les scores en fonction du prochain mouvement
+            if (nextMoove == 'U') {
+                scoreUp += 1;
+            } else if (nextMoove == 'R') {
+                scoreRight += 1;
+            } else if (nextMoove == 'L') {
+                scoreLeft += 1;
+            } else {
+                scoreDown += 1;
             }
+
+            System.err.println("NextMoove: " + nextMoove);
+
+            // Incrémenter la position du joueur
             playerPosition++;
+
         }
 
         ScoreAction scoreAction = new ScoreAction();
