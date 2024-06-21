@@ -59,7 +59,7 @@ class Player {
 
 
             scoreMax = Math.max(scoreRight, Math.max(scoreLeft, Math.max(scoreDown, scoreUp)));
-            System.err.println("scoreUp : " + scoreUp + " scoreLeft : " + scoreLeft + " scoreDown : " + scoreDown + " scoreRight : " + scoreRight);
+            System.err.println("Resultat Up : " + scoreUp + " Left : " + scoreLeft + " Down : " + scoreDown + " Right : " + scoreRight);
 
 
             if (scoreMax == scoreRight) {
@@ -97,7 +97,7 @@ class Bow implements Game {
 
 
         if (playerIdx == 0) {
-           this.positionX = reg0;
+            this.positionX = reg0;
             this.positionY = reg1;
         } else if (playerIdx == 1) {
             this.positionX = reg2;
@@ -114,7 +114,7 @@ class Bow implements Game {
             } else {
                 activeGames = "";
             }
-        this.cursorPosition = new CursorPosition(positionX, positionY);
+            this.cursorPosition = new CursorPosition(positionX, positionY);
         }
     }
 
@@ -130,9 +130,9 @@ class Bow implements Game {
         if (activeGames != null) {
             int centreX = 0 - cursorPosition.positionX;
             int centreY = 0 - cursorPosition.positionY;
-            if (centreX < 0) {
+            if (centreX > 0) {
                 scoreRight += 1;
-            } else if (centreX > 0) {
+            } else if (centreX < 0) {
                 scoreLeft += 1;
             }
             if (centreY < 0) {
@@ -143,6 +143,7 @@ class Bow implements Game {
         }
         System.err.println ( "CursorPosition X :" + cursorPosition.positionX + " CursorPosition Y :" + cursorPosition.positionY);
         System.err.println("windforce: " + windforce);
+        System.err.println("scoreUp : " + scoreUp + " scoreLeft : " + scoreLeft + " scoreDown : " + scoreDown + " scoreRight : " + scoreRight);
 
 
         ScoreAction scoreAction = new ScoreAction();
@@ -240,6 +241,7 @@ class Diving implements Game {
             }
 
             System.err.println("NextMoove: " + nextMoove);
+            System.err.println("scoreUp : " + scoreUp + " scoreLeft : " + scoreLeft + " scoreDown : " + scoreDown + " scoreRight : " + scoreRight);
 
 
         }
@@ -329,6 +331,7 @@ class Hurdle implements Game {
             } else {
                 scoreUp += 1;
             }
+            System.err.println("scoreUp : " + scoreUp + " scoreLeft : " + scoreLeft + " scoreDown : " + scoreDown + " scoreRight : " + scoreRight);
         }
         ScoreAction scoreAction = new ScoreAction();
         scoreAction.scoreRight = scoreRight;
@@ -336,6 +339,8 @@ class Hurdle implements Game {
         scoreAction.scoreLeft = scoreLeft;
         scoreAction.scoreUp = scoreUp;
         return scoreAction;
+
+
     }
 }
 
