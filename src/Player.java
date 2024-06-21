@@ -97,14 +97,14 @@ class Bow implements Game {
 
 
         if (playerIdx == 0) {
-            positionX = reg0;
-            positionY = reg1;
+           this.positionX = reg0;
+            this.positionY = reg1;
         } else if (playerIdx == 1) {
-            positionX = reg2;
-            positionY = reg3;
+            this.positionX = reg2;
+            this.positionY = reg3;
         } else {
-            positionX = reg4;
-            positionY = reg5;
+            this.positionX = reg4;
+            this.positionY = reg5;
         }
 
         if (!gpu.equals("GAME_OVER") && windforce == 0) {
@@ -114,7 +114,7 @@ class Bow implements Game {
             } else {
                 activeGames = "";
             }
-
+        this.cursorPosition = new CursorPosition(positionX, positionY);
         }
     }
 
@@ -128,23 +128,20 @@ class Bow implements Game {
 
 
         if (activeGames != null) {
-            
-                int centreX = 0 - cursorPosition.positionX;
-                int centreY = 0 - cursorPosition.positionY;
-
-                if (centreX < 0) {
-                    scoreRight += 1;
-                } else if (centreX > 0) {
-                    scoreLeft += 1;
-                }
-                if (centreY < 0) {
-                    scoreUp += 1;
-                } else if (centreY > 0) {
-                    scoreDown += 1;
-                }
+            int centreX = 0 - cursorPosition.positionX;
+            int centreY = 0 - cursorPosition.positionY;
+            if (centreX < 0) {
+                scoreRight += 1;
+            } else if (centreX > 0) {
+                scoreLeft += 1;
             }
-
-
+            if (centreY < 0) {
+                scoreUp += 1;
+            } else if (centreY > 0) {
+                scoreDown += 1;
+            }
+        }
+        System.err.println ( "CursorPosition X :" + cursorPosition.positionX + " CursorPosition Y :" + cursorPosition.positionY);
         System.err.println("windforce: " + windforce);
 
 
@@ -219,24 +216,24 @@ class Diving implements Game {
 
             // Mettre à jour les scores en fonction du prochain mouvement
             if (nextMoove == 'U') {
-                if (this.combo > 2) {
+                if (this.combo >= 2) {
                     scoreUp += 2;
                 } else {
                     scoreUp += 1;
                 }
             } else if (nextMoove == 'R') {
-                if (this.combo > 2) {
+                if (this.combo >= 2) {
                     scoreRight += 2;
                 } else {
                     scoreRight += 1;
                 }
             } else if (nextMoove == 'L') {
-                if (this.combo > 2) {
+                if (this.combo >= 2) {
                     scoreLeft += 2;
                 } else {
                     scoreLeft += 1;
                 }
-            } else if (this.combo > 2) {
+            } else if (this.combo >= 2) {
                 scoreDown += 2;
             } else {
                 scoreDown += 1;
