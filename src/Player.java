@@ -142,9 +142,9 @@ class Bow implements Game {
                     scoreLeft += 1;
                 }
             } else if (absPositionX > absPositionY) {
-                if (positionY < 0) {
+                if (positionY > 0) {
                     scoreUp += 1;
-                } else if (positionY > 0) {
+                } else if (positionY < 0) {
                     scoreDown += 1;
                 }
             } else {
@@ -228,6 +228,7 @@ class Diving implements Game {
         int scoreUp = 0;
         int scoreMax = 0;
 
+
         if (activeGames != null && playerPosition < activeGames.length()) {
             // Obtenir le prochain mouvement à la position actuelle du joueur
             char nextMoove = activeGames.charAt(0);
@@ -258,10 +259,10 @@ class Diving implements Game {
                 scoreDown += 1;
             }
             if (this.combo >= 1) {
-                scoreUp *= 4;
-                scoreLeft *= 4;
-                scoreDown *= 4;
-                scoreRight *= 4;
+                scoreUp *= 1;
+                scoreLeft *= 1;
+                scoreDown *= 1;
+                scoreRight *= 1;
             }
 
             System.err.println("NextMoove: " + nextMoove);
@@ -334,6 +335,9 @@ class Hurdle implements Game {
                 }
                 if (firstHurdle > 2) {
                     scoreDown += 1;
+                } if (firstHurdle > 4) {
+                    scoreUp += 1;
+
                 }
 
             } else {
@@ -355,6 +359,10 @@ class Hurdle implements Game {
             } else {
                 scoreUp += 1;
             }
+            scoreUp *= 1;
+            scoreLeft *= 1;
+            scoreDown *= 1;
+            scoreRight *= 1;
             System.err.println("scoreUp : " + scoreUp + " scoreLeft : " + scoreLeft + " scoreDown : " + scoreDown + " scoreRight : " + scoreRight);
         }
         ScoreAction scoreAction = new ScoreAction();
