@@ -13,10 +13,23 @@ class Player {
             in.nextLine();
         }
 
+
         // game loop
         while (true) {
+            List<String> scoreInfoList = new ArrayList<>();
             for (int i = 0; i < 3; i++) {
                 String scoreInfo = in.nextLine();
+                System.err.println("scoreInfo : " + scoreInfo);
+                scoreInfoList.add(scoreInfo);
+            }
+
+            for (String scoreInfo : scoreInfoList) {
+                if (scoreInfo.length() > 10) {
+                    char index2 = scoreInfo.charAt(2);
+                    char index8 = scoreInfo.charAt(8);
+                    char index20 = scoreInfo.charAt(20);
+                    System.err.println("Index 2: " + index2 + ", Index 8: " + index8 + ", Index 20: " + index20);
+                }
             }
 
             List<Game> games = new ArrayList<>();
@@ -31,12 +44,23 @@ class Player {
                 int reg6 = in.nextInt();
                 in.nextLine();
 
+                boolean goldPrevious = false;
+
+                if (i == 0 && Integer.parseInt(String.valueOf(scoreInfoList.get(0).charAt(2))) > 0) {
+                    goldPrevious = true;
+                } else if (i == 3 && Integer.parseInt(String.valueOf(scoreInfoList.get(1).charAt(20))) > 0) {
+                    goldPrevious = true;
+                } else if (i == 1 && Integer.parseInt(String.valueOf(scoreInfoList.get(2).charAt(8))) > 0) {
+                    goldPrevious = true;
+                }
+
+
                 if (i == 0) {
-                    games.add(new Hurdle(gpu, reg0, reg1, reg2, reg3, reg4, reg5, reg6, playerIdx));
+                    games.add(new Hurdle(gpu, reg0, reg1, reg2, reg3, reg4, reg5, reg6, playerIdx, goldPrevious));
                 } else if (i == 3) {
-                    games.add(new Diving(gpu, reg0, reg1, reg2, reg3, reg4, reg5, reg6, playerIdx));
+                    games.add(new Diving(gpu, reg0, reg1, reg2, reg3, reg4, reg5, reg6, playerIdx, goldPrevious));
                 } else if (i == 1) {
-                    games.add(new Bow(gpu, reg0, reg1, reg2, reg3, reg4, reg5, reg6, playerIdx));
+                    games.add(new Bow(gpu, reg0, reg1, reg2, reg3, reg4, reg5, reg6, playerIdx, goldPrevious));
                 }
             }
 
@@ -79,6 +103,7 @@ class Player {
 
 interface Game {
     ScoreAction compute();
+    boolean goldPrevious();
 }
 
 class Bow implements Game {
@@ -87,12 +112,13 @@ class Bow implements Game {
     public int positionY;
     public int windforce;
     public CursorPosition cursorPosition;
+    private boolean goldPrevious = false;
 
-
-    public Bow(String gpu, int reg0, int reg1, int reg2, int reg3, int reg4, int reg5, int reg6, int playerIdx) {
+    public Bow(String gpu, int reg0, int reg1, int reg2, int reg3, int reg4, int reg5, int reg6, int playerIdx, boolean previousMedalGold) {
         this.positionX = 0;
         this.positionY = 0;
         this.windforce = 0;
+        this.goldPrevious = previousMedalGold;
 
         this.cursorPosition = new CursorPosition(0, 0);
 
@@ -118,9 +144,9 @@ class Bow implements Game {
             this.cursorPosition = new CursorPosition(positionX, positionY);
         }
 
-        System.err.println("Position du curseur : (" + cursorPosition.positionX + ", " + cursorPosition.positionY + ")");
-        System.err.println("Force du vent : " + windforce);
+
     }
+
 
     @Override
     public ScoreAction compute() {
@@ -129,7 +155,6 @@ class Bow implements Game {
         int scoreLeft = 0;
         int scoreUp = 0;
         int scoreMax = 0;
-
 
 
         if (activeGames != null) {
@@ -175,6 +200,10 @@ class Bow implements Game {
         return scoreAction;
     }
 
+    public boolean goldPrevious() {
+        return goldPrevious;
+    }
+
     public static class CursorPosition {
         public int positionX;
         public int positionY;
@@ -193,11 +222,13 @@ class Diving implements Game {
     public static int moove;
     public int playerPosition;
     public int combo;
+    private boolean goldPrevious = false;
 
-    public Diving(String gpu, int reg0, int reg1, int reg2, int reg3, int reg4, int reg5, int reg6, int playerIdx) {
+    public Diving(String gpu, int reg0, int reg1, int reg2, int reg3, int reg4, int reg5, int reg6, int playerIdx, boolean previousMedalGold) {
 
         int combo = 0;
         int pointsPlayer = 0;
+        this.goldPrevious = previousMedalGold;
 
 
         if (playerIdx == 0) {
@@ -283,6 +314,9 @@ class Diving implements Game {
         return scoreAction;
 
     }
+    public boolean goldPrevious() {
+        return goldPrevious;
+    }
 
 
 }
@@ -291,9 +325,10 @@ class Hurdle implements Game {
     public String activeGames;
     public static int firstHurdle;
     public static int retourHurdle;
+    private boolean goldPrevious = false;
 
-    public Hurdle(String gpu, int reg0, int reg1, int reg2, int reg3, int reg4, int reg5, int reg6, int playerIdx) {
-
+    public Hurdle(String gpu, int reg0, int reg1, int reg2, int reg3, int reg4, int reg5, int reg6, int playerIdx, boolean previousMedalGold) {
+        this.goldPrevious = previousMedalGold;
         int stun = 0;
         int positionPlayer = 0;
         if (playerIdx == 0) {
@@ -339,7 +374,8 @@ class Hurdle implements Game {
                 }
                 if (firstHurdle > 2) {
                     scoreDown += 1;
-                } if (firstHurdle > 4) {
+                }
+                if (firstHurdle > 4) {
                     scoreUp += 1;
 
                 }
@@ -377,6 +413,9 @@ class Hurdle implements Game {
         return scoreAction;
 
 
+    }
+    public boolean goldPrevious() {
+        return goldPrevious;
     }
 }
 
