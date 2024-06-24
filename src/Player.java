@@ -49,6 +49,7 @@ class Player {
 
 
             // Perform actions with the active games
+
             for (Game game : games) {
                 ScoreAction scores = game.compute();
                 scoreRight += scores.scoreRight;
@@ -116,6 +117,9 @@ class Bow implements Game {
             }
             this.cursorPosition = new CursorPosition(positionX, positionY);
         }
+
+        System.err.println("Position du curseur : (" + cursorPosition.positionX + ", " + cursorPosition.positionY + ")");
+        System.err.println("Force du vent : " + windforce);
     }
 
     @Override
@@ -127,23 +131,36 @@ class Bow implements Game {
         int scoreMax = 0;
 
 
+
         if (activeGames != null) {
-            int centreX = 0 - cursorPosition.positionX;
-            int centreY = 0 - cursorPosition.positionY;
-            if (centreX > 0) {
-                scoreRight += 1;
-            } else if (centreX < 0) {
-                scoreLeft += 1;
+            int absPositionX = Math.abs(positionX);
+            int absPositionY = Math.abs(positionY);
+            if (absPositionX < absPositionY) {
+                if (positionX < 0) {
+                    scoreRight += 1;
+                } else if (positionX > 0) {
+                    scoreLeft += 1;
+                }
+            } else if (absPositionX > absPositionY) {
+                if (positionY < 0) {
+                    scoreUp += 1;
+                } else if (positionY > 0) {
+                    scoreDown += 1;
+                }
+            } else {
+                // Si absPositionX et absPositionY sont égaux, prioriser arbitrairement un mouvement
+                if (positionX < 0) {
+                    scoreRight += 1;
+                } else if (positionX > 0) {
+                    scoreLeft += 1;
+                } else if (positionY > 0) {
+                    scoreUp += 1;
+                } else if (positionY < 0) {
+                    scoreDown += 1;
+                }
             }
-            if (centreY < 0) {
-                scoreUp += 1;
-            } else if (centreY > 0) {
-                scoreDown += 1;
-            }
+            System.err.println("scoreUp : " + scoreUp + " scoreLeft : " + scoreLeft + " scoreDown : " + scoreDown + " scoreRight : " + scoreRight);
         }
-        System.err.println ( "CursorPosition X :" + cursorPosition.positionX + " CursorPosition Y :" + cursorPosition.positionY);
-        System.err.println("windforce: " + windforce);
-        System.err.println("scoreUp : " + scoreUp + " scoreLeft : " + scoreLeft + " scoreDown : " + scoreDown + " scoreRight : " + scoreRight);
 
 
         ScoreAction scoreAction = new ScoreAction();
@@ -160,8 +177,9 @@ class Bow implements Game {
 
         public CursorPosition(int PositionX, int PositionY) {
             this.positionX = Math.max(-20, Math.min(20, PositionX)); // voir pour l'intervalle [-20;20]
-            this.positionY = Math.max(-20, Math.min(20, PositionX)); // voir pour l'intervalle [-20;20]
+            this.positionY = Math.max(-20, Math.min(20, PositionY)); // voir pour l'intervalle [-20;20]
         }
+
     }
 
 }
@@ -217,27 +235,33 @@ class Diving implements Game {
 
             // Mettre à jour les scores en fonction du prochain mouvement
             if (nextMoove == 'U') {
-                if (this.combo >= 2) {
+                if (this.combo >= 1) {
                     scoreUp += 2;
                 } else {
                     scoreUp += 1;
                 }
             } else if (nextMoove == 'R') {
-                if (this.combo >= 2) {
+                if (this.combo >= 1) {
                     scoreRight += 2;
                 } else {
                     scoreRight += 1;
                 }
             } else if (nextMoove == 'L') {
-                if (this.combo >= 2) {
+                if (this.combo >= 1) {
                     scoreLeft += 2;
                 } else {
                     scoreLeft += 1;
                 }
-            } else if (this.combo >= 2) {
+            } else if (this.combo >= 1) {
                 scoreDown += 2;
             } else {
                 scoreDown += 1;
+            }
+            if (this.combo >= 1) {
+                scoreUp *= 4;
+                scoreLeft *= 4;
+                scoreDown *= 4;
+                scoreRight *= 4;
             }
 
             System.err.println("NextMoove: " + nextMoove);
