@@ -52,7 +52,7 @@ class Player {
                     goldPrevious = true;
                 } else if (i == 1 && Integer.parseInt(String.valueOf(scoreInfoList.get(2).charAt(8))) > 0) {
                     goldPrevious = true;
-                }
+                }  System.err.println("Gold Previous : " + goldPrevious);
 
 
                 if (i == 0) {
@@ -65,6 +65,8 @@ class Player {
             }
 
 
+
+
             int scoreRight = 0;
             int scoreDown = 0;
             int scoreLeft = 0;
@@ -73,7 +75,6 @@ class Player {
 
 
             // Perform actions with the active games
-
             for (Game game : games) {
                 ScoreAction scores = game.compute();
                 scoreRight += scores.scoreRight;
