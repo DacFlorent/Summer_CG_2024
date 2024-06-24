@@ -65,7 +65,7 @@ class Player {
 
             if (scoreMax == scoreRight) {
                 System.out.println("RIGHT");
-            } else if (scoreMax == scoreDown) {
+            } else if (scoreMax == scoreDown && scoreDown != scoreUp) {
                 System.out.println("DOWN");
             } else if (scoreMax == scoreUp) {
                 System.out.println("UP");
@@ -135,13 +135,17 @@ class Bow implements Game {
         if (activeGames != null) {
             int absPositionX = Math.abs(positionX);
             int absPositionY = Math.abs(positionY);
-            if (absPositionX < absPositionY) {
+            System.err.println("Position du curseur : (" + positionX + ", " + positionY + ")");
+            System.err.println("Cible : (0, 0)");
+            System.err.println("Force du vent : " + windforce);
+
+            if (absPositionX > absPositionY) {
                 if (positionX < 0) {
                     scoreRight += 1;
                 } else if (positionX > 0) {
                     scoreLeft += 1;
                 }
-            } else if (absPositionX > absPositionY) {
+            } else if (absPositionX < absPositionY) {
                 if (positionY > 0) {
                     scoreUp += 1;
                 } else if (positionY < 0) {
@@ -210,7 +214,7 @@ class Diving implements Game {
         playerPosition = 0;
 
         if (!gpu.equals("GAME_OVER") && this.combo >= 0) {
-            if (playerPosition <= gpu.length() && pointsPlayer >= 0) {
+            if (playerPosition < gpu.length() && pointsPlayer >= 0) {
                 activeGames = gpu.substring(playerPosition);
             } else {
                 activeGames = "";
@@ -359,10 +363,10 @@ class Hurdle implements Game {
             } else {
                 scoreUp += 1;
             }
-            scoreUp *= 1;
-            scoreLeft *= 1;
-            scoreDown *= 1;
-            scoreRight *= 1;
+            scoreUp *= 2;
+            scoreLeft *= 2;
+            scoreDown *= 2;
+            scoreRight *= 2;
             System.err.println("scoreUp : " + scoreUp + " scoreLeft : " + scoreLeft + " scoreDown : " + scoreDown + " scoreRight : " + scoreRight);
         }
         ScoreAction scoreAction = new ScoreAction();
