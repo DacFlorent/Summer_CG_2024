@@ -13,7 +13,6 @@ class Player {
             in.nextLine();
         }
 
-
         // game loop
         while (true) {
             List<String> scoreInfoList = new ArrayList<>();
@@ -49,12 +48,17 @@ class Player {
 
                 boolean goldPrevious = false;
 
-                if (i == 0 && Integer.parseInt(String.valueOf(scoreInfoList.get(0).charAt(2))) > 0) {
-                    goldPrevious = true;
-                } else if (i == 3 && Integer.parseInt(String.valueOf(scoreInfoList.get(1).charAt(20))) > 0) {
-                    goldPrevious = true;
-                } else if (i == 1 && Integer.parseInt(String.valueOf(scoreInfoList.get(2).charAt(8))) > 0) {
-                    goldPrevious = true;
+                try {
+                    if (i == 0 && Integer.parseInt(String.valueOf(scoreInfoList.get(0).charAt(2))) > 0) {
+                        goldPrevious = true;
+                    } else if (i == 3 && Integer.parseInt(String.valueOf(scoreInfoList.get(1).charAt(20))) > 0) {
+                        goldPrevious = true;
+                    } else if (i == 1 && Integer.parseInt(String.valueOf(scoreInfoList.get(2).charAt(8))) > 0) {
+                        goldPrevious = true;
+                    }
+                }catch (NumberFormatException e) {
+                    System.err.println("Erreur de format de nombre: " + e.getMessage());
+
                 }  System.err.println("Gold Previous : " + goldPrevious);
 
 
@@ -81,11 +85,24 @@ class Player {
             // Perform actions with the active games
             for (Game game : games) {
                 ScoreAction scores = game.compute();
+
+                // Si le jeu précédent n'a pas obtenu une médaille d'or, appliquer le facteur x2
+                if (!game.goldPrevious()) {
+                    scores.scoreRight *= 2;
+                    scores.scoreDown *= 2;
+                    scores.scoreLeft *= 2;
+                    scores.scoreUp *= 2;
+                }
+
                 scoreRight += scores.scoreRight;
                 scoreDown += scores.scoreDown;
                 scoreLeft += scores.scoreLeft;
                 scoreUp += scores.scoreUp;
+
+                game.resetGoldPrevious();
             }
+
+
 
 
             scoreMax = Math.max(scoreRight, Math.max(scoreLeft, Math.max(scoreDown, scoreUp)));
