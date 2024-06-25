@@ -33,6 +33,9 @@ class Player {
             }
 
             List<Game> games = new ArrayList<>();
+
+
+
             for (int i = 0; i < nbGames; i++) {
                 String gpu = in.next();
                 int reg0 = in.nextInt();
@@ -62,6 +65,7 @@ class Player {
                 } else if (i == 1) {
                     games.add(new Bow(gpu, reg0, reg1, reg2, reg3, reg4, reg5, reg6, playerIdx, goldPrevious));
                 }
+
             }
 
 
@@ -97,6 +101,9 @@ class Player {
             } else {
                 System.out.println("LEFT");
             }
+            for (Game game : games) {
+                game.resetGoldPrevious();
+            }
         }
 
     }
@@ -105,6 +112,7 @@ class Player {
 interface Game {
     ScoreAction compute();
     boolean goldPrevious();
+    void resetGoldPrevious();
 }
 
 class Bow implements Game {
@@ -203,6 +211,9 @@ class Bow implements Game {
 
     public boolean goldPrevious() {
         return goldPrevious;
+    }
+    public void resetGoldPrevious() {
+        goldPrevious = false;
     }
 
     public static class CursorPosition {
@@ -318,6 +329,9 @@ class Diving implements Game {
     public boolean goldPrevious() {
         return goldPrevious;
     }
+    public void resetGoldPrevious() {
+        goldPrevious = false;
+    }
 
 
 }
@@ -417,6 +431,9 @@ class Hurdle implements Game {
     }
     public boolean goldPrevious() {
         return goldPrevious;
+    }
+    public void resetGoldPrevious() {
+        goldPrevious = false;
     }
 }
 
